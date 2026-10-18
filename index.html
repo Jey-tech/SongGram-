@@ -14,6 +14,7 @@
       --bg-color: #050510;
       --neon-blue: #00f0ff;
       --neon-purple: #9d00ff;
+      --neon-pink: #ff00ea;
       --glass-bg: rgba(255, 255, 255, 0.03);
       --glass-border: rgba(255, 255, 255, 0.08);
       --text-main: #ffffff;
@@ -28,15 +29,12 @@
       color: var(--text-main);
       font-family: 'Rajdhani', sans-serif;
       margin: 0;
-      /* فاصله دادن از بالای صفحه برای دکمه Close تلگرام */
       padding: 70px 20px 30px 20px; 
       display: flex;
       flex-direction: column;
       align-items: center;
-      /* تغییر ارتفاع برای جلوگیری از بریدگی در گوشی‌های کوچک */
       min-height: 100vh; 
-      height: auto;
-      overflow-y: auto; 
+      overflow: hidden; /* جلوگیری از اسکرول صفحه اصلی */
       box-sizing: border-box;
       position: relative;
       direction: ltr;
@@ -44,7 +42,7 @@
 
     body::after {
       content: "";
-      position: fixed; /* ثابت کردن خطوط روی کل صفحه */
+      position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
       background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.1) 2px, rgba(0,0,0,0.1) 4px);
       pointer-events: none;
@@ -86,7 +84,7 @@
       animation: float 6s ease-in-out infinite;
       display: flex;
       flex-direction: column;
-      margin-bottom: 20px; /* فاصله از پایین صفحه */
+      margin-bottom: 20px; 
     }
 
     @keyframes float {
@@ -101,21 +99,27 @@
       width: 100%;
       margin-bottom: 15px;
       padding: 0 10px;
+      z-index: 5;
     }
 
     .action-icon {
-      width: 24px;
-      height: 24px;
+      width: 28px;
+      height: 28px;
       stroke: var(--text-sub);
       fill: none;
       stroke-width: 2;
       cursor: pointer;
-      transition: all 0.3s;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
-    .action-icon:hover, .action-icon:active {
-      stroke: var(--neon-purple);
-      filter: drop-shadow(0 0 8px var(--neon-purple));
+    
+    .action-icon.favorited {
+      stroke: var(--neon-pink);
+      fill: rgba(255, 0, 234, 0.2);
+      filter: drop-shadow(0 0 10px var(--neon-pink));
+      transform: scale(1.2);
     }
+    
+    .action-icon:active { transform: scale(0.9); }
 
     .cover-container {
       width: 100%;
@@ -294,6 +298,109 @@
       70% { box-shadow: 0 0 0 15px rgba(0, 240, 255, 0); }
       100% { box-shadow: 0 0 0 0 rgba(0, 240, 255, 0); }
     }
+
+    /* --- استایل‌های مربوط به منوی پلی‌لیست --- */
+    .playlist-overlay {
+      position: fixed;
+      top: 100%; /* از پایین صفحه شروع میشه */
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: var(--bg-color);
+      background-image: 
+        radial-gradient(circle at 50% 0%, rgba(157, 0, 255, 0.15), transparent 50%),
+        radial-gradient(circle at 50% 100%, rgba(0, 240, 255, 0.15), transparent 50%);
+      z-index: 100;
+      transition: top 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      padding: 70px 20px 30px 20px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .playlist-overlay.open {
+      top: 0;
+    }
+
+    .playlist-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      border-bottom: 2px solid rgba(255,255,255,0.1);
+      padding-bottom: 15px;
+    }
+
+    .playlist-header h2 {
+      font-family: 'Orbitron', sans-serif;
+      margin: 0;
+      color: var(--neon-blue);
+      font-size: 22px;
+      letter-spacing: 2px;
+      text-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      color: var(--text-main);
+      font-size: 24px;
+      cursor: pointer;
+      opacity: 0.7;
+    }
+    .close-btn:active { opacity: 1; color: var(--neon-pink); }
+
+    .playlist-items {
+      flex-grow: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    /* استایل هر آهنگ در لیست */
+    .playlist-item {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 15px;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .playlist-item:active {
+      background: rgba(255, 255, 255, 0.08);
+      transform: scale(0.98);
+    }
+
+    .playlist-item .p-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 16px;
+      color: var(--text-main);
+      margin-bottom: 5px;
+    }
+
+    .playlist-item .p-artist {
+      font-size: 14px;
+      color: var(--text-sub);
+    }
+
+    /* آهنگی که در حال پخشه، هایلایت میشه */
+    .playlist-item.active {
+      border-color: var(--neon-pink);
+      box-shadow: 0 0 15px rgba(255, 0, 234, 0.2);
+    }
+    .playlist-item.active .p-title {
+      color: var(--neon-pink);
+      text-shadow: 0 0 8px rgba(255, 0, 234, 0.5);
+    }
+    .playlist-item.active .p-artist {
+      color: var(--neon-pink);
+      opacity: 0.7;
+    }
   </style>
 </head>
 <body>
@@ -305,11 +412,13 @@
 
   <div class="player-card">
     <div class="top-actions">
-      <svg class="action-icon" viewBox="0 0 24 24">
+      <!-- Playlist Icon (حالا کلیک پذیر شده) -->
+      <svg class="action-icon" viewBox="0 0 24 24" onclick="togglePlaylist()">
         <path d="M4 6h16M4 12h12M4 18h16" stroke-linecap="square"/>
         <circle cx="20" cy="12" r="1.5" fill="currentColor"/>
       </svg>
-      <svg class="action-icon" viewBox="0 0 24 24">
+      <!-- Heart Icon -->
+      <svg class="action-icon" id="favIcon" viewBox="0 0 24 24" onclick="toggleFavorite()">
         <path d="M12 21 L3 12 L8 7 L12 11 L16 7 L21 12 Z" stroke-linejoin="miter"/>
       </svg>
     </div>
@@ -350,7 +459,18 @@
     </div>
   </div>
 
-  <audio id="audio" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
+  <!-- منوی کشویی پلی‌لیست -->
+  <div class="playlist-overlay" id="playlistOverlay">
+    <div class="playlist-header">
+      <h2>Playlist</h2>
+      <button class="close-btn" onclick="togglePlaylist()">✕</button>
+    </div>
+    <div class="playlist-items" id="playlistItems">
+      <!-- آهنگ‌ها با جاوااسکریپت اینجا ساخته میشن -->
+    </div>
+  </div>
+
+  <audio id="audio" src=""></audio>
 
   <script>
     let tg = window.Telegram.WebApp;
@@ -374,22 +494,86 @@
     const totalTime = document.getElementById('total-time');
     const title = document.getElementById('title');
     const artist = document.getElementById('artist');
+    const favIcon = document.getElementById('favIcon');
+    const playlistOverlay = document.getElementById('playlistOverlay');
+    const playlistItemsContainer = document.getElementById('playlistItems');
 
     const SVG_PLAY = '<path d="M7 4 L19 12 L7 20 Z" />';
     const SVG_PAUSE = '<path d="M6 4 h4 v16 h-4 Z M14 4 h4 v16 h-4 Z" />';
 
     const playlist = [
-      { title: "Neon Sound", artist: "Cyber Maker", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" },
-      { title: "The Matrix", artist: "Hologram DJ", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" },
-      { title: "Space Journey", artist: "Galaxy", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" }
+      { id: 1, title: "Neon Sound", artist: "Cyber Maker", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" },
+      { id: 2, title: "The Matrix", artist: "Hologram DJ", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" },
+      { id: 3, title: "Space Journey", artist: "Galaxy", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" },
+      { id: 4, title: "Cyberpunk City", artist: "Synthwave", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3" }
     ];
     let trackIndex = 0;
+
+    let favorites = JSON.parse(localStorage.getItem('songgram_favs')) || [];
+
+    // تابع ساخت لیست آهنگ‌ها در منو
+    function renderPlaylist() {
+      playlistItemsContainer.innerHTML = ''; // پاک کردن لیست قبلی
+      
+      playlist.forEach((song, index) => {
+        const item = document.createElement('div');
+        // اگر آهنگ در حال پخش بود، کلاس active بگیره
+        item.className = `playlist-item ${index === trackIndex ? 'active' : ''}`;
+        item.innerHTML = `
+          <div>
+            <div class="p-title">${song.title}</div>
+            <div class="p-artist">${song.artist}</div>
+          </div>
+        `;
+        // وقتی روی آهنگ کلیک شد
+        item.onclick = () => {
+          trackIndex = index;
+          loadTrack(trackIndex);
+          playTrack();
+          togglePlaylist(); // بستن منو
+        };
+        playlistItemsContainer.appendChild(item);
+      });
+    }
+
+    // باز و بسته کردن منو
+    function togglePlaylist() {
+      tg.HapticFeedback.impactOccurred('medium');
+      playlistOverlay.classList.toggle('open');
+      if (playlistOverlay.classList.contains('open')) {
+        renderPlaylist(); // هر بار که باز شد لیست آپدیت بشه
+      }
+    }
 
     function loadTrack(index) {
       audio.src = playlist[index].src;
       title.innerText = playlist[index].title;
       artist.innerText = playlist[index].artist;
       progress.value = 0;
+      updateFavoriteIcon();
+    }
+
+    function updateFavoriteIcon() {
+      const currentTrackId = playlist[trackIndex].id;
+      if (favorites.includes(currentTrackId)) {
+        favIcon.classList.add('favorited');
+      } else {
+        favIcon.classList.remove('favorited');
+      }
+    }
+
+    function toggleFavorite() {
+      tg.HapticFeedback.impactOccurred('medium');
+      const currentTrackId = playlist[trackIndex].id;
+      
+      if (favorites.includes(currentTrackId)) {
+        favorites = favorites.filter(id => id !== currentTrackId);
+      } else {
+        favorites.push(currentTrackId);
+      }
+      
+      localStorage.setItem('songgram_favs', JSON.stringify(favorites));
+      updateFavoriteIcon();
     }
 
     function playTrack() {
