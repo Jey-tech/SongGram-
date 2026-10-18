@@ -22,6 +22,7 @@
       --glass-border: rgba(255, 255, 255, 0.6);
       --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
       --nav-height: 70px;
+      --mini-player-height: 65px;
     }
 
     * { box-sizing: border-box; }
@@ -45,11 +46,12 @@
       overflow-y: auto;
       padding: 20px;
       padding-top: calc(20px + env(safe-area-inset-top, 0px));
-      padding-bottom: calc(var(--nav-height) + 20px + env(safe-area-inset-bottom, 20px));
+      /* فاصله پایین بیشتر شد تا نوار مینی پلیر روی محتوا نیفته */
+      padding-bottom: calc(var(--nav-height) + var(--mini-player-height) + 30px + env(safe-area-inset-bottom, 20px));
       position: relative;
+      transition: padding-bottom 0.3s ease;
     }
     
-    /* مخفی کردن اسکرول‌بار */
     .app-content::-webkit-scrollbar { display: none; }
 
     .view-section {
@@ -101,7 +103,7 @@
       position: relative; height: 180px; border-radius: 24px; overflow: hidden; margin-bottom: 20px;
       background: linear-gradient(45deg, #a78bfa, #f472b6);
       display: flex; flex-direction: column; justify-content: center; padding: 20px;
-      color: white;
+      color: white; cursor: pointer;
     }
     .hero-card::before {
       content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -132,7 +134,7 @@
     .category-item span { font-size: 12px; font-weight: 600; color: var(--text-dark); }
     .category-item:active .cat-icon { transform: scale(0.9); }
 
-    /* --- لیست آهنگ‌ها (اخیر و کتابخانه) --- */
+    /* --- لیست آهنگ‌ها --- */
     .song-list { display: flex; flex-direction: column; gap: 12px; }
     .song-item {
       display: flex; align-items: center; gap: 15px;
@@ -140,7 +142,7 @@
       padding: 10px; border-radius: 16px; cursor: pointer; transition: all 0.2s;
     }
     .song-item:active { transform: scale(0.98); background: rgba(255,255,255,0.6); }
-    .song-cover { width: 50px; height: 50px; border-radius: 12px; background: linear-gradient(135deg, #c4b5fd, #fbcfe8); display: flex; justify-content: center; align-items: center; }
+    .song-cover { width: 50px; height: 50px; border-radius: 12px; display: flex; justify-content: center; align-items: center; }
     .song-cover svg { width: 24px; height: 24px; fill: white; }
     .song-info { flex-grow: 1; text-align: left; }
     .song-info h4 { margin: 0 0 4px 0; font-size: 14px; font-weight: 700; color: var(--text-dark); }
@@ -169,7 +171,7 @@
     .create-playlist-btn h4 { margin: 0; font-size: 15px; color: var(--text-dark); }
     .create-playlist-btn p { margin: 3px 0 0 0; font-size: 12px; color: var(--text-light); }
 
-    /* --- صفحه پلیر (Now Playing - Full Screen) --- */
+    /* --- صفحه پلیر (Now Playing) --- */
     .player-screen {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       background: linear-gradient(135deg, var(--bg-grad-2) 0%, var(--bg-grad-1) 100%);
@@ -191,8 +193,7 @@
       width: 100%; aspect-ratio: 1/1; border-radius: 30px; overflow: hidden;
       box-shadow: 0 20px 40px rgba(139, 92, 246, 0.3); margin-bottom: 30px; position: relative;
     }
-    .album-art { width: 100%; height: 100%; object-fit: cover; }
-    .album-art-placeholder { width: 100%; height: 100%; background: linear-gradient(45deg, #c4b5fd, #f9a8d4); display: flex; justify-content: center; align-items: center; }
+    .album-art-placeholder { width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; }
     .album-art-placeholder svg { width: 80px; height: 80px; fill: white; opacity: 0.5; }
 
     .player-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
@@ -208,7 +209,6 @@
     .progress-bar-container { height: 6px; background: rgba(0,0,0,0.1); border-radius: 10px; overflow: hidden; margin-bottom: 10px; position: relative; }
     .progress-fill { height: 100%; background: var(--primary); width: 0%; border-radius: 10px; }
     .progress-time { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-light); font-weight: 600; }
-    /* اسلایدر مخفی برای کنترل زمان */
     input[type=range].seek-slider { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; margin: 0; }
 
     .player-controls { display: flex; justify-content: space-between; align-items: center; padding: 0 10px; }
@@ -247,6 +247,50 @@
     .nav-item.active svg { stroke: white; }
     .nav-item.active span { display: block; color: white; }
 
+    /* --- مینی پلیر (Mini Player) --- */
+    .mini-player {
+      position: fixed;
+      bottom: calc(var(--nav-height) + 8px); /* بالای نوار ناوبری */
+      left: 15px;
+      right: 15px;
+      height: var(--mini-player-height);
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+      display: flex; align-items: center; padding: 0 10px; gap: 12px;
+      transform: translateY(150%); /* مخفی در حالت اولیه */
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      z-index: 60;
+      cursor: pointer;
+    }
+    .mini-player.show { transform: translateY(0); }
+
+    .mini-progress-bg {
+      position: absolute; top: 0; left: 0; width: 100%; height: 3px;
+      background: rgba(0,0,0,0.05); border-radius: 20px 20px 0 0; overflow: hidden;
+    }
+    .mini-progress-fill { height: 100%; background: var(--primary); width: 0%; transition: width 0.2s; }
+
+    .mini-cover {
+      width: 42px; height: 42px; border-radius: 12px;
+      display: flex; justify-content: center; align-items: center; flex-shrink: 0;
+    }
+    .mini-cover svg { width: 20px; height: 20px; fill: white; }
+    
+    .mini-info { flex-grow: 1; overflow: hidden; text-align: left; }
+    .mini-info h4 { margin: 0 0 2px 0; font-size: 13px; font-weight: 700; color: var(--text-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .mini-info p { margin: 0; font-size: 11px; color: var(--text-light); font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    
+    .mini-play-btn {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: var(--primary); border: none; display: flex; justify-content: center; align-items: center;
+      cursor: pointer; box-shadow: 0 4px 10px rgba(139, 92, 246, 0.3); flex-shrink: 0;
+    }
+    .mini-play-btn svg { width: 18px; height: 18px; fill: white; }
+    .mini-play-btn svg.play-icon { margin-left: 2px; }
+
   </style>
 </head>
 <body>
@@ -261,7 +305,7 @@
 
       <div class="greeting">
         <p>Good Morning</p>
-        <h1 id="user-name">Hitesh 👋</h1>
+        <h1 id="user-name">Loading... 👋</h1>
       </div>
 
       <div class="search-bar">
@@ -333,27 +377,36 @@
       </button>
 
       <div class="song-list">
-        <!-- Playlist 1 -->
         <div class="song-item" onclick="openPlayer(1)">
           <div class="song-cover" style="background: linear-gradient(45deg, #8b5cf6, #d946ef);"><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></div>
           <div class="song-info"><h4>Favorites</h4><p>128 Songs</p></div>
           <button class="play-small-btn"><svg viewBox="0 0 24 24"><path d="M7 4 L19 12 L7 20 Z" /></svg></button>
         </div>
-        <!-- Playlist 2 -->
         <div class="song-item" onclick="openPlayer(2)">
           <div class="song-cover" style="background: linear-gradient(45deg, #f59e0b, #ef4444);"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10H12V2z"/></svg></div>
           <div class="song-info"><h4>Workout Hits</h4><p>56 Songs</p></div>
           <button class="play-small-btn"><svg viewBox="0 0 24 24"><path d="M7 4 L19 12 L7 20 Z" /></svg></button>
         </div>
-        <!-- Playlist 3 -->
-        <div class="song-item" onclick="openPlayer(3)">
-          <div class="song-cover" style="background: linear-gradient(45deg, #10b981, #3b82f6);"><svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div>
-          <div class="song-info"><h4>Chill Vibes</h4><p>80 Songs</p></div>
-          <button class="play-small-btn"><svg viewBox="0 0 24 24"><path d="M7 4 L19 12 L7 20 Z" /></svg></button>
-        </div>
       </div>
     </section>
   </main>
+
+  <!-- ================= نوار مینی پلیر (Mini Player) ================= -->
+  <div class="mini-player" id="miniPlayer" onclick="openFullPlayerFromMini()">
+    <div class="mini-progress-bg">
+      <div class="mini-progress-fill" id="miniProgressFill"></div>
+    </div>
+    <div class="mini-cover" id="miniCover">
+      <svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+    </div>
+    <div class="mini-info">
+      <h4 id="miniTitle">Song Title</h4>
+      <p id="miniArtist">Artist</p>
+    </div>
+    <button class="mini-play-btn" id="miniPlayBtn" onclick="togglePlayFromMini(event)">
+      <svg id="miniPlayIcon" class="play-icon" viewBox="0 0 24 24"><path d="M7 4 L19 12 L7 20 Z" /></svg>
+    </button>
+  </div>
 
   <!-- ================= صفحه پلیر (Now Playing) ================= -->
   <div class="player-screen" id="playerScreen">
@@ -363,14 +416,14 @@
       </button>
       <div class="player-header-text">
         <h5>Now Playing</h5>
-        <h3>Playlist • Chill Vibes</h3>
+        <h3 id="player-playlist-name">Playlist</h3>
       </div>
       <button class="close-player">
         <svg viewBox="0 0 24 24" stroke-width="2" fill="none"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
       </button>
     </header>
 
-    <div class="album-art-container">
+    <div class="album-art-container" id="fullPlayerCover">
       <div class="album-art-placeholder">
          <svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
       </div>
@@ -378,8 +431,8 @@
 
     <div class="player-info">
       <div class="player-info-text">
-        <h2 id="player-title">Blinding Lights</h2>
-        <p id="player-artist">The Weeknd</p>
+        <h2 id="player-title">Song Title</h2>
+        <p id="player-artist">Artist</p>
       </div>
       <button class="heart-btn" id="player-heart" onclick="toggleLike()">
         <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
@@ -392,8 +445,8 @@
         <input type="range" class="seek-slider" id="seekSlider" value="0" min="0" max="100" step="0.1">
       </div>
       <div class="progress-time">
-        <span id="player-curr-time">1:32</span>
-        <span id="player-total-time">3:20</span>
+        <span id="player-curr-time">0:00</span>
+        <span id="player-total-time">0:00</span>
       </div>
     </div>
 
@@ -405,12 +458,6 @@
       </button>
       <button class="control-btn" onclick="nextTrack()"><svg viewBox="0 0 24 24"><path d="M5 4l10 8-10 8V4zM19 5v14"/></svg></button>
       <button class="control-btn"><svg viewBox="0 0 24 24"><path d="M17 2.1l4 4-4 4"/><path d="M3 12.2v-1a9 9 0 0 1 9-9h8.1"/><path d="M7 21.9l-4-4 4-4"/><path d="M21 11.8v1a9 9 0 0 1-9 9H3.9"/></svg></button>
-    </div>
-
-    <div class="player-bottom-bar">
-      <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-      <svg viewBox="0 0 24 24"><path d="M12 20V10M18 20V4M6 20v-4"/></svg>
-      <svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
     </div>
   </div>
 
@@ -434,33 +481,26 @@
     </div>
   </nav>
 
-  <!-- آudio tag -->
   <audio id="audioElement"></audio>
 
   <script>
     let tg = window.Telegram.WebApp;
     tg.ready();
     tg.expand();
-    tg.setHeaderColor('#e0e7ff'); // هماهنگ با تم روشن
+    tg.setHeaderColor('#e0e7ff'); 
     tg.setBackgroundColor('#e0e7ff');
-    
-    // محافظت از بسته شدن ناگهانی
     tg.enableClosingConfirmation(); 
 
     const user = tg.initDataUnsafe?.user;
-    if (user) {
-      document.getElementById('user-name').innerText = `${user.first_name} 👋`;
-    }
+    if (user) document.getElementById('user-name').innerText = `${user.first_name} 👋`;
 
-    // --- داده‌های آهنگ ---
     const allSongs = [
       { id: 1, title: "Blinding Lights", artist: "The Weeknd", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3", coverColor: "linear-gradient(45deg, #c4b5fd, #f9a8d4)" },
       { id: 2, title: "Peaches", artist: "Justin Bieber", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3", coverColor: "linear-gradient(45deg, #fca5a5, #fbbf24)" },
-      { id: 3, title: "Neon Sound", artist: "Cyber Maker", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3", coverColor: "linear-gradient(45deg, #6ee7b7, #3b82f6)" },
-      { id: 4, title: "The Matrix", artist: "Hologram DJ", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3", coverColor: "linear-gradient(45deg, #1e1b4b, #8b5cf6)" }
+      { id: 3, title: "Neon Sound", artist: "Cyber Maker", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3", coverColor: "linear-gradient(45deg, #6ee7b7, #3b82f6)" }
     ];
 
-    // --- رندر لیست اخیر (Recently Played) ---
+    // رندر لیست اخیر
     const recentList = document.getElementById('recent-list');
     allSongs.forEach((song, index) => {
       const el = document.createElement('div');
@@ -479,18 +519,28 @@
       recentList.appendChild(el);
     });
 
-    // --- منطق پلیر ---
+    // --- المان‌های پلیر ---
     const audio = document.getElementById('audioElement');
     const playerScreen = document.getElementById('playerScreen');
-    const playPauseBtn = document.getElementById('playPauseBtn');
+    
+    // دکمه‌های صفحه بزرگ
     const mainPlayIcon = document.getElementById('mainPlayIcon');
     const playerTitle = document.getElementById('player-title');
     const playerArtist = document.getElementById('player-artist');
     const playerHeart = document.getElementById('player-heart');
+    const fullPlayerCover = document.getElementById('fullPlayerCover');
     const seekSlider = document.getElementById('seekSlider');
     const progressFill = document.getElementById('player-progress-fill');
     const currTimeEl = document.getElementById('player-curr-time');
     const totalTimeEl = document.getElementById('player-total-time');
+
+    // المان‌های مینی پلیر
+    const miniPlayer = document.getElementById('miniPlayer');
+    const miniTitle = document.getElementById('miniTitle');
+    const miniArtist = document.getElementById('miniArtist');
+    const miniCover = document.getElementById('miniCover');
+    const miniPlayIcon = document.getElementById('miniPlayIcon');
+    const miniProgressFill = document.getElementById('miniProgressFill');
 
     const SVG_PLAY = '<path d="M7 4 L19 12 L7 20 Z" />';
     const SVG_PAUSE = '<path d="M6 4h4v16H6zM14 4h4v16h-4z" />';
@@ -499,23 +549,35 @@
     let isPlaying = false;
     let likedSongs = JSON.parse(localStorage.getItem('sg_likes')) || [];
 
+    // --- توابع پلیر ---
     function openPlayer(index) {
       tg.HapticFeedback.impactOccurred('medium');
       currentTrackIndex = index;
       const song = allSongs[index];
       
+      // آپدیت صفحه بزرگ
       playerTitle.innerText = song.title;
       playerArtist.innerText = song.artist;
+      fullPlayerCover.style.background = song.coverColor;
       
-      // لود کردن آهنگ
+      // آپدیت مینی پلیر
+      miniTitle.innerText = song.title;
+      miniArtist.innerText = song.artist;
+      miniCover.style.background = song.coverColor;
+      
+      // لود و پلی
       audio.src = song.src;
       playAudio();
       
-      // نمایش صفحه پلیر
+      // نمایش صفحات
       playerScreen.classList.add('open');
-      
-      // آپدیت قلب
+      miniPlayer.classList.add('show'); // نمایش مینی پلیر
       updateHeartIcon(song.id);
+    }
+
+    function openFullPlayerFromMini() {
+      tg.HapticFeedback.impactOccurred('light');
+      playerScreen.classList.add('open');
     }
 
     function closePlayer() {
@@ -527,18 +589,27 @@
       audio.play();
       isPlaying = true;
       mainPlayIcon.innerHTML = SVG_PAUSE;
+      miniPlayIcon.innerHTML = SVG_PAUSE;
+      miniPlayIcon.classList.remove('play-icon');
     }
 
     function pauseAudio() {
       audio.pause();
       isPlaying = false;
       mainPlayIcon.innerHTML = SVG_PLAY;
+      miniPlayIcon.innerHTML = SVG_PLAY;
+      miniPlayIcon.classList.add('play-icon');
     }
 
     function togglePlay() {
       tg.HapticFeedback.impactOccurred('heavy');
       if (isPlaying) pauseAudio();
       else playAudio();
+    }
+
+    function togglePlayFromMini(event) {
+      event.stopPropagation(); // جلوگیری از باز شدن صفحه بزرگ
+      togglePlay();
     }
 
     function nextTrack() {
@@ -551,15 +622,19 @@
       openPlayer(currentTrackIndex);
     }
 
-    // --- آپدیت نوار پیشرفت ---
+    // --- آپدیت نوارهای پیشرفت ---
     audio.addEventListener('timeupdate', () => {
       if (!audio.duration) return;
       const percent = (audio.currentTime / audio.duration) * 100;
+      
+      // آپدیت صفحه بزرگ
       progressFill.style.width = `${percent}%`;
       seekSlider.value = percent;
-      
       currTimeEl.innerText = formatTime(audio.currentTime);
       totalTimeEl.innerText = formatTime(audio.duration);
+
+      // آپدیت مینی پلیر
+      miniProgressFill.style.width = `${percent}%`;
     });
 
     seekSlider.addEventListener('input', () => {
@@ -577,11 +652,10 @@
       return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
     }
 
-    // --- منطق لایک ---
+    // --- لایک ---
     function toggleLike() {
       tg.HapticFeedback.impactOccurred('medium');
       const id = allSongs[currentTrackIndex].id;
-      
       if (likedSongs.includes(id)) {
         likedSongs = likedSongs.filter(songId => songId !== id);
         playerHeart.classList.remove('active');
@@ -600,10 +674,7 @@
     // --- ناوبری ---
     function switchTab(tabId, element) {
       tg.HapticFeedback.impactOccurred('light');
-      // اگر روی explore یا premium زد، فعلا به لایبرری بره (چون نساختیم)
-      if(tabId === 'explore' || tabId === 'premium') {
-        tabId = 'library';
-      }
+      if(tabId === 'explore' || tabId === 'premium') tabId = 'library'; // موقت
 
       document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
       const target = document.getElementById(`${tabId}-view`);
