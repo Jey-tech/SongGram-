@@ -6,13 +6,16 @@
   <title>SongGram</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
+    /* متغیرهای رنگی که به صورت خودکار از تلگرام خونده میشن */
     :root {
-      --bg-color: #121212;
-      --card-bg: #1e1e1e;
-      --primary: #1DB954;
-      --text-main: #ffffff;
-      --text-sub: #b3b3b3;
+      --bg-color: var(--tg-theme-bg-color, #121212);
+      --text-main: var(--tg-theme-text-color, #ffffff);
+      --text-sub: var(--tg-theme-hint-color, #b3b3b3);
+      --primary: var(--tg-theme-button-color, #1DB954);
+      --primary-text: var(--tg-theme-button-text-color, #ffffff);
+      --card-bg: var(--tg-theme-secondary-bg-color, #1e1e1e);
     }
+
     body {
       background-color: var(--bg-color);
       color: var(--text-main);
@@ -25,109 +28,153 @@
       height: 100vh;
       box-sizing: border-box;
       overflow: hidden;
+      transition: background-color 0.3s, color 0.3s;
     }
+
     .header { width: 100%; text-align: center; margin-bottom: 20px; }
-    .header h1 { margin: 0; font-size: 24px; color: var(--primary); }
-    .header p { margin: 5px 0 0 0; color: var(--text-sub); font-size: 16px; }
+    .header h1 { margin: 0; font-size: 26px; font-weight: 800; color: var(--primary); letter-spacing: -1px; }
+    .header p { margin: 5px 0 0 0; color: var(--text-sub); font-size: 15px; }
     
+    /* کارت اصلی با افکت شیشه‌ای (Glassmorphism) */
     .player-card {
-      background-color: var(--card-bg);
+      background: var(--card-bg);
       width: 100%;
-      max-width: 350px;
-      border-radius: 25px;
-      padding: 25px 20px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      max-width: 340px;
+      border-radius: 28px;
+      padding: 24px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.15);
       text-align: center;
       box-sizing: border-box;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(128, 128, 128, 0.1);
     }
     
-    .cover-art {
-      width: 180px;
-      height: 180px;
-      border-radius: 50%;
-      background: linear-gradient(45deg, #1DB954, #191414);
-      margin: 0 auto 20px auto;
+    /* کاور آلبوم مدرن (مربعی) */
+    .cover-container {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border-radius: 20px;
+      background: linear-gradient(135deg, var(--primary) 0%, #191414 100%);
+      margin-bottom: 20px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 60px;
-      box-shadow: 0 0 30px rgba(29, 185, 84, 0.3);
-      animation: spin 15s linear infinite;
-      animation-play-state: paused; /* در حالت عادی متوقف است */
     }
-    .cover-art.playing { animation-play-state: running; }
+
+    /* دیسک چرخان داخل کاور */
+    .disc {
+      width: 50%;
+      height: 50%;
+      border-radius: 50%;
+      background: radial-gradient(circle, #333 30%, #111 70%);
+      border: 2px solid rgba(255,255,255,0.1);
+      position: relative;
+      animation: spin 10s linear infinite;
+      animation-play-state: paused;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .disc::after {
+      content: '';
+      width: 15%;
+      height: 15%;
+      background: var(--bg-color);
+      border-radius: 50%;
+      position: absolute;
+    }
+
+    .disc.playing { animation-play-state: running; }
     @keyframes spin { 100% { transform: rotate(360deg); } }
     
-    .song-title { font-size: 20px; font-weight: bold; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
+    .song-title { font-size: 20px; font-weight: 700; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .artist-name { color: var(--text-sub); font-size: 14px; margin-bottom: 20px; }
     
-    /* استایل نوار پیشرفت */
+    /* نوار پیشرفت مدرن */
     .progress-container {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
       width: 100%;
-      margin-bottom: 20px;
+      margin-bottom: 25px;
       font-size: 12px;
       color: var(--text-sub);
+      font-variant-numeric: tabular-nums;
     }
+    
     .progress-bar {
       flex-grow: 1;
       -webkit-appearance: none;
-      height: 4px;
-      background: #404040;
-      border-radius: 5px;
+      height: 6px;
+      background: rgba(128, 128, 128, 0.3);
+      border-radius: 10px;
       outline: none;
-    }
-    .progress-bar::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: var(--primary);
       cursor: pointer;
     }
+    
+    .progress-bar::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--text-main);
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+      transition: transform 0.1s;
+    }
+    .progress-bar::-webkit-slider-thumb:active { transform: scale(1.3); }
     
     .controls {
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 25px;
+      gap: 30px;
     }
+    
     .control-btn {
       background: none;
       border: none;
       color: var(--text-main);
-      font-size: 25px;
+      font-size: 22px;
       cursor: pointer;
+      opacity: 0.7;
+      transition: opacity 0.2s;
     }
+    .control-btn:active { opacity: 1; transform: scale(0.9); }
+
     .play-btn {
       background-color: var(--primary);
-      color: white;
+      color: var(--primary-text);
       border: none;
-      width: 65px;
-      height: 65px;
+      width: 70px;
+      height: 70px;
       border-radius: 50%;
       font-size: 28px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 4px 15px rgba(29, 185, 84, 0.4);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.2);
       transition: transform 0.1s;
     }
-    .play-btn:active, .control-btn:active { transform: scale(0.9); }
+    .play-btn:active { transform: scale(0.9); }
   </style>
 </head>
 <body>
 
   <div class="header">
-    <h1>SongGram 🎧</h1>
+    <h1>SongGram</h1>
     <p id="welcome-text">در حال بارگذاری...</p>
   </div>
 
   <div class="player-card">
-    <div class="cover-art" id="vinyl">💿</div>
+    <!-- کاور و دیسک چرخان -->
+    <div class="cover-container">
+      <div class="disc" id="disc"></div>
+    </div>
     
     <div class="song-title" id="title">Trending Track</div>
     <div class="artist-name" id="artist">Artist Name</div>
@@ -145,7 +192,6 @@
     </div>
   </div>
 
-  <!-- تگ صوتی مخفی برای پخش آهنگ -->
   <audio id="audio" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
 
   <script>
@@ -153,7 +199,9 @@
     tg.ready();
     tg.expand();
 
-    // گرفتن اسم کاربر
+    // تغییر رنگ هدر تلگرام برای هماهنگی بیشتر (اختیاری)
+    tg.setHeaderColor('secondary_bg_color');
+
     const user = tg.initDataUnsafe?.user;
     if (user) {
       document.getElementById('welcome-text').innerText = `سلام ${user.first_name} عزیز! 👋`;
@@ -161,17 +209,15 @@
       document.getElementById('welcome-text').innerText = `سلام کاربر عزیز!`;
     }
 
-    // --- منطق پخش‌کننده موسیقی ---
     const audio = document.getElementById('audio');
     const playBtn = document.getElementById('playBtn');
-    const vinyl = document.getElementById('vinyl');
+    const disc = document.getElementById('disc');
     const progress = document.getElementById('progress');
     const currTime = document.getElementById('curr-time');
     const totalTime = document.getElementById('total-time');
     const title = document.getElementById('title');
     const artist = document.getElementById('artist');
 
-    // لیست آهنگ‌های تستی (بعداً این‌ها رو از دیتابیس می‌خونیم)
     const playlist = [
       { title: "آهنگ تست اول", artist: "هنرمند اول", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" },
       { title: "آهنگ تست دوم", artist: "هنرمند دوم", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" },
@@ -188,14 +234,14 @@
 
     function playTrack() {
       audio.play();
-      playBtn.innerHTML = '⏸️';
-      vinyl.classList.add('playing');
+      playBtn.innerHTML = '⏸';
+      disc.classList.add('playing');
     }
 
     function pauseTrack() {
       audio.pause();
       playBtn.innerHTML = '▶️';
-      vinyl.classList.remove('playing');
+      disc.classList.remove('playing');
     }
 
     function togglePlay() {
@@ -221,7 +267,6 @@
       tg.HapticFeedback.impactOccurred('light');
     }
 
-    // فرمت کردن زمان (ثانیه به دقیقه)
     function formatTime(seconds) {
       if (isNaN(seconds)) return "0:00";
       const mins = Math.floor(seconds / 60);
@@ -229,7 +274,6 @@
       return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
     }
 
-    // آپدیت نوار پیشرفت هنگام پخش
     audio.addEventListener('timeupdate', () => {
       const percent = (audio.currentTime / audio.duration) * 100;
       progress.value = percent || 0;
@@ -237,16 +281,12 @@
       totalTime.innerText = formatTime(audio.duration);
     });
 
-    // تغییر زمان آهنگ با کشیدن نوار
     progress.addEventListener('input', () => {
       const time = (progress.value / 100) * audio.duration;
       audio.currentTime = time;
     });
 
-    // وقتی آهنگ تموم شد بره بعدی
     audio.addEventListener('ended', nextTrack);
-
-    // بارگذاری اولیه
     loadTrack(trackIndex);
   </script>
 </body>
