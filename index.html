@@ -24,97 +24,230 @@
       align-items: center;
       height: 100vh;
       box-sizing: border-box;
+      overflow: hidden;
     }
-    .header { width: 100%; text-align: center; margin-bottom: 30px; }
+    .header { width: 100%; text-align: center; margin-bottom: 20px; }
     .header h1 { margin: 0; font-size: 24px; color: var(--primary); }
     .header p { margin: 5px 0 0 0; color: var(--text-sub); font-size: 16px; }
+    
     .player-card {
       background-color: var(--card-bg);
       width: 100%;
       max-width: 350px;
-      border-radius: 20px;
-      padding: 20px;
+      border-radius: 25px;
+      padding: 25px 20px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.5);
       text-align: center;
       box-sizing: border-box;
     }
+    
     .cover-art {
-      width: 200px; height: 200px; border-radius: 50%;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
       background: linear-gradient(45deg, #1DB954, #191414);
       margin: 0 auto 20px auto;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 50px;
-      box-shadow: 0 0 20px rgba(29, 185, 84, 0.3);
-      animation: spin 10s linear infinite;
-      animation-play-state: paused;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 60px;
+      box-shadow: 0 0 30px rgba(29, 185, 84, 0.3);
+      animation: spin 15s linear infinite;
+      animation-play-state: paused; /* در حالت عادی متوقف است */
     }
     .cover-art.playing { animation-play-state: running; }
     @keyframes spin { 100% { transform: rotate(360deg); } }
-    .song-title { font-size: 20px; font-weight: bold; margin-bottom: 5px; }
-    .artist-name { color: var(--text-sub); font-size: 14px; margin-bottom: 25px; }
-    .controls { display: flex; justify-content: center; align-items: center; gap: 20px; }
+    
+    .song-title { font-size: 20px; font-weight: bold; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
+    .artist-name { color: var(--text-sub); font-size: 14px; margin-bottom: 20px; }
+    
+    /* استایل نوار پیشرفت */
+    .progress-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      margin-bottom: 20px;
+      font-size: 12px;
+      color: var(--text-sub);
+    }
+    .progress-bar {
+      flex-grow: 1;
+      -webkit-appearance: none;
+      height: 4px;
+      background: #404040;
+      border-radius: 5px;
+      outline: none;
+    }
+    .progress-bar::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--primary);
+      cursor: pointer;
+    }
+    
+    .controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 25px;
+    }
+    .control-btn {
+      background: none;
+      border: none;
+      color: var(--text-main);
+      font-size: 25px;
+      cursor: pointer;
+    }
     .play-btn {
-      background-color: var(--primary); color: white; border: none;
-      width: 70px; height: 70px; border-radius: 50%; font-size: 30px;
-      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      width: 65px;
+      height: 65px;
+      border-radius: 50%;
+      font-size: 28px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       box-shadow: 0 4px 15px rgba(29, 185, 84, 0.4);
       transition: transform 0.1s;
     }
-    .play-btn:active { transform: scale(0.9); }
+    .play-btn:active, .control-btn:active { transform: scale(0.9); }
   </style>
 </head>
 <body>
 
   <div class="header">
     <h1>SongGram 🎧</h1>
-    <!-- این متن رو داینامیک کردیم تا اسم کاربر رو نشون بده -->
     <p id="welcome-text">در حال بارگذاری...</p>
   </div>
 
   <div class="player-card">
     <div class="cover-art" id="vinyl">💿</div>
-    <div class="song-title">Trending Track</div>
-    <div class="artist-name">Artist Name</div>
+    
+    <div class="song-title" id="title">Trending Track</div>
+    <div class="artist-name" id="artist">Artist Name</div>
+    
+    <div class="progress-container">
+      <span id="curr-time">0:00</span>
+      <input type="range" class="progress-bar" id="progress" value="0" min="0" max="100" step="0.1">
+      <span id="total-time">0:00</span>
+    </div>
     
     <div class="controls">
+      <button class="control-btn" onclick="prevTrack()">⏮</button>
       <button class="play-btn" id="playBtn" onclick="togglePlay()">▶️</button>
+      <button class="control-btn" onclick="nextTrack()">⏭</button>
     </div>
   </div>
+
+  <!-- تگ صوتی مخفی برای پخش آهنگ -->
+  <audio id="audio" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
 
   <script>
     let tg = window.Telegram.WebApp;
     tg.ready();
     tg.expand();
 
-    // --- کد جدید: گرفتن اسم کاربر از تلگرام ---
+    // گرفتن اسم کاربر
     const user = tg.initDataUnsafe?.user;
-    const welcomeText = document.getElementById('welcome-text');
-    
     if (user) {
-      // اگر تلگرام اسم کاربر رو داد، این پیام رو نشون بده
-      welcomeText.innerText = `سلام ${user.first_name} عزیز! 👋`;
+      document.getElementById('welcome-text').innerText = `سلام ${user.first_name} عزیز! 👋`;
     } else {
-      // اگر کاربر از مرورگر معمولی وارد شد (نه تلگرام)
-      welcomeText.innerText = `سلام کاربر عزیز!`;
+      document.getElementById('welcome-text').innerText = `سلام کاربر عزیز!`;
     }
-    // ------------------------------------------
 
-    let isPlaying = false;
+    // --- منطق پخش‌کننده موسیقی ---
+    const audio = document.getElementById('audio');
     const playBtn = document.getElementById('playBtn');
     const vinyl = document.getElementById('vinyl');
+    const progress = document.getElementById('progress');
+    const currTime = document.getElementById('curr-time');
+    const totalTime = document.getElementById('total-time');
+    const title = document.getElementById('title');
+    const artist = document.getElementById('artist');
+
+    // لیست آهنگ‌های تستی (بعداً این‌ها رو از دیتابیس می‌خونیم)
+    const playlist = [
+      { title: "آهنگ تست اول", artist: "هنرمند اول", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" },
+      { title: "آهنگ تست دوم", artist: "هنرمند دوم", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" },
+      { title: "آهنگ تست سوم", artist: "هنرمند سوم", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" }
+    ];
+    let trackIndex = 0;
+
+    function loadTrack(index) {
+      audio.src = playlist[index].src;
+      title.innerText = playlist[index].title;
+      artist.innerText = playlist[index].artist;
+      progress.value = 0;
+    }
+
+    function playTrack() {
+      audio.play();
+      playBtn.innerHTML = '⏸️';
+      vinyl.classList.add('playing');
+    }
+
+    function pauseTrack() {
+      audio.pause();
+      playBtn.innerHTML = '▶️';
+      vinyl.classList.remove('playing');
+    }
 
     function togglePlay() {
-      isPlaying = !isPlaying;
       tg.HapticFeedback.impactOccurred('medium');
-
-      if (isPlaying) {
-        playBtn.innerHTML = '⏸️';
-        vinyl.classList.add('playing');
+      if (audio.paused) {
+        playTrack();
       } else {
-        playBtn.innerHTML = '▶️';
-        vinyl.classList.remove('playing');
+        pauseTrack();
       }
     }
+
+    function nextTrack() {
+      trackIndex = (trackIndex + 1) % playlist.length;
+      loadTrack(trackIndex);
+      playTrack();
+      tg.HapticFeedback.impactOccurred('light');
+    }
+
+    function prevTrack() {
+      trackIndex = (trackIndex - 1 + playlist.length) % playlist.length;
+      loadTrack(trackIndex);
+      playTrack();
+      tg.HapticFeedback.impactOccurred('light');
+    }
+
+    // فرمت کردن زمان (ثانیه به دقیقه)
+    function formatTime(seconds) {
+      if (isNaN(seconds)) return "0:00";
+      const mins = Math.floor(seconds / 60);
+      const secs = Math.floor(seconds % 60);
+      return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+    }
+
+    // آپدیت نوار پیشرفت هنگام پخش
+    audio.addEventListener('timeupdate', () => {
+      const percent = (audio.currentTime / audio.duration) * 100;
+      progress.value = percent || 0;
+      currTime.innerText = formatTime(audio.currentTime);
+      totalTime.innerText = formatTime(audio.duration);
+    });
+
+    // تغییر زمان آهنگ با کشیدن نوار
+    progress.addEventListener('input', () => {
+      const time = (progress.value / 100) * audio.duration;
+      audio.currentTime = time;
+    });
+
+    // وقتی آهنگ تموم شد بره بعدی
+    audio.addEventListener('ended', nextTrack);
+
+    // بارگذاری اولیه
+    loadTrack(trackIndex);
   </script>
 </body>
 </html>
