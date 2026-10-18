@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Beif Music</title>
+  <title>SongGram</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     :root {
@@ -25,21 +25,9 @@
       height: 100vh;
       box-sizing: border-box;
     }
-    .header {
-      width: 100%;
-      text-align: center;
-      margin-bottom: 30px;
-    }
-    .header h1 {
-      margin: 0;
-      font-size: 24px;
-      color: var(--primary);
-    }
-    .header p {
-      margin: 5px 0 0 0;
-      color: var(--text-sub);
-      font-size: 14px;
-    }
+    .header { width: 100%; text-align: center; margin-bottom: 30px; }
+    .header h1 { margin: 0; font-size: 24px; color: var(--primary); }
+    .header p { margin: 5px 0 0 0; color: var(--text-sub); font-size: 16px; }
     .player-card {
       background-color: var(--card-bg);
       width: 100%;
@@ -51,66 +39,36 @@
       box-sizing: border-box;
     }
     .cover-art {
-      width: 200px;
-      height: 200px;
-      border-radius: 50%;
+      width: 200px; height: 200px; border-radius: 50%;
       background: linear-gradient(45deg, #1DB954, #191414);
       margin: 0 auto 20px auto;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: flex; align-items: center; justify-content: center;
       font-size: 50px;
       box-shadow: 0 0 20px rgba(29, 185, 84, 0.3);
       animation: spin 10s linear infinite;
       animation-play-state: paused;
     }
-    .cover-art.playing {
-      animation-play-state: running;
-    }
-    @keyframes spin {
-      100% { transform: rotate(360deg); }
-    }
-    .song-title {
-      font-size: 20px;
-      font-weight: bold;
-      margin-bottom: 5px;
-    }
-    .artist-name {
-      color: var(--text-sub);
-      font-size: 14px;
-      margin-bottom: 25px;
-    }
-    .controls {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 20px;
-    }
+    .cover-art.playing { animation-play-state: running; }
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+    .song-title { font-size: 20px; font-weight: bold; margin-bottom: 5px; }
+    .artist-name { color: var(--text-sub); font-size: 14px; margin-bottom: 25px; }
+    .controls { display: flex; justify-content: center; align-items: center; gap: 20px; }
     .play-btn {
-      background-color: var(--primary);
-      color: white;
-      border: none;
-      width: 70px;
-      height: 70px;
-      border-radius: 50%;
-      font-size: 30px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      background-color: var(--primary); color: white; border: none;
+      width: 70px; height: 70px; border-radius: 50%; font-size: 30px;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
       box-shadow: 0 4px 15px rgba(29, 185, 84, 0.4);
       transition: transform 0.1s;
     }
-    .play-btn:active {
-      transform: scale(0.9);
-    }
+    .play-btn:active { transform: scale(0.9); }
   </style>
 </head>
 <body>
 
   <div class="header">
-    <h1>Beif Music 🎧</h1>
-    <p>پلیر اختصاصی تو در تلگرام</p>
+    <h1>SongGram 🎧</h1>
+    <!-- این متن رو داینامیک کردیم تا اسم کاربر رو نشون بده -->
+    <p id="welcome-text">در حال بارگذاری...</p>
   </div>
 
   <div class="player-card">
@@ -127,6 +85,19 @@
     let tg = window.Telegram.WebApp;
     tg.ready();
     tg.expand();
+
+    // --- کد جدید: گرفتن اسم کاربر از تلگرام ---
+    const user = tg.initDataUnsafe?.user;
+    const welcomeText = document.getElementById('welcome-text');
+    
+    if (user) {
+      // اگر تلگرام اسم کاربر رو داد، این پیام رو نشون بده
+      welcomeText.innerText = `سلام ${user.first_name} عزیز! 👋`;
+    } else {
+      // اگر کاربر از مرورگر معمولی وارد شد (نه تلگرام)
+      welcomeText.innerText = `سلام کاربر عزیز!`;
+    }
+    // ------------------------------------------
 
     let isPlaying = false;
     const playBtn = document.getElementById('playBtn');
