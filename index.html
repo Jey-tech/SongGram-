@@ -3,21 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>SongGram</title>
+  <title>SongGram 2030</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
-    /* متغیرهای رنگی که به صورت خودکار از تلگرام خونده میشن */
+    /* پالت رنگی سایبرپانک (نئون آبی و بنفش) */
     :root {
-      --bg-color: var(--tg-theme-bg-color, #121212);
-      --text-main: var(--tg-theme-text-color, #ffffff);
-      --text-sub: var(--tg-theme-hint-color, #b3b3b3);
-      --primary: var(--tg-theme-button-color, #1DB954);
-      --primary-text: var(--tg-theme-button-text-color, #ffffff);
-      --card-bg: var(--tg-theme-secondary-bg-color, #1e1e1e);
+      --bg-color: #050510; /* مشکی عمیق فضایی */
+      --neon-blue: #00f0ff;
+      --neon-purple: #9d00ff;
+      --glass-bg: rgba(255, 255, 255, 0.03);
+      --glass-border: rgba(255, 255, 255, 0.08);
+      --text-main: #ffffff;
+      --text-sub: #8892b0;
     }
 
     body {
       background-color: var(--bg-color);
+      /* ساخت یک پس‌زمینه کهکشانی با گرادیانت */
+      background-image: 
+        radial-gradient(circle at 15% 50%, rgba(157, 0, 255, 0.15), transparent 40%),
+        radial-gradient(circle at 85% 30%, rgba(0, 240, 255, 0.15), transparent 40%);
       color: var(--text-main);
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       margin: 0;
@@ -28,79 +33,128 @@
       height: 100vh;
       box-sizing: border-box;
       overflow: hidden;
-      transition: background-color 0.3s, color 0.3s;
+      position: relative;
     }
 
-    .header { width: 100%; text-align: center; margin-bottom: 20px; }
-    .header h1 { margin: 0; font-size: 26px; font-weight: 800; color: var(--primary); letter-spacing: -1px; }
-    .header p { margin: 5px 0 0 0; color: var(--text-sub); font-size: 15px; }
+    /* خطوط اسکن (حس هولوگرام) */
+    body::after {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.1) 2px, rgba(0,0,0,0.1) 4px);
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    .header { width: 100%; text-align: center; margin-bottom: 20px; z-index: 2; }
+    .header h1 { 
+      margin: 0; 
+      font-size: 28px; 
+      font-weight: 900; 
+      background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      filter: drop-shadow(0 0 10px rgba(0, 240, 255, 0.5));
+    }
+    .header p { margin: 8px 0 0 0; color: var(--text-sub); font-size: 15px; letter-spacing: 1px; }
     
-    /* کارت اصلی با افکت شیشه‌ای (Glassmorphism) */
+    /* کارت شیشه‌ای شناور */
     .player-card {
-      background: var(--card-bg);
+      background: var(--glass-bg);
       width: 100%;
       max-width: 340px;
-      border-radius: 28px;
-      padding: 24px;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+      border-radius: 32px;
+      padding: 25px;
+      box-shadow: 
+        0 20px 50px rgba(0,0,0,0.6),
+        inset 0 0 0 1px var(--glass-border); /* حاشیه نازک شیشه‌ای */
       text-align: center;
       box-sizing: border-box;
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(128, 128, 128, 0.1);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      position: relative;
+      z-index: 2;
+      animation: float 6s ease-in-out infinite; /* انیمیشن شناور بودن */
     }
-    
-    /* کاور آلبوم مدرن (مربعی) */
+
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
+    }
+
+    /* کاور با نور نئونی */
     .cover-container {
       width: 100%;
       aspect-ratio: 1 / 1;
-      border-radius: 20px;
-      background: linear-gradient(135deg, var(--primary) 0%, #191414 100%);
-      margin-bottom: 20px;
+      border-radius: 50%; /* گرد کردن کاور برای حس هولوگرام */
+      background: linear-gradient(135deg, #1a1a2e, #16213e);
+      margin-bottom: 25px;
       position: relative;
       overflow: hidden;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+      box-shadow: 
+        0 0 30px rgba(0, 240, 255, 0.2),
+        0 0 60px rgba(157, 0, 255, 0.1),
+        inset 0 0 20px rgba(0,0,0,0.8);
       display: flex;
       align-items: center;
       justify-content: center;
+      border: 2px solid rgba(255,255,255,0.05);
     }
 
-    /* دیسک چرخان داخل کاور */
+    /* هسته چرخان (شبیه راکتور آرک) */
     .disc {
-      width: 50%;
-      height: 50%;
+      width: 60%;
+      height: 60%;
       border-radius: 50%;
-      background: radial-gradient(circle, #333 30%, #111 70%);
-      border: 2px solid rgba(255,255,255,0.1);
+      background: radial-gradient(circle, #000 20%, #111 80%);
       position: relative;
       animation: spin 10s linear infinite;
       animation-play-state: paused;
       display: flex;
       align-items: center;
       justify-content: center;
+      box-shadow: inset 0 0 20px var(--neon-purple), 0 0 20px var(--neon-blue);
     }
     
+    .disc::before {
+      content: '';
+      position: absolute;
+      width: 100%; height: 100%;
+      border-radius: 50%;
+      border: 2px dashed rgba(0, 240, 255, 0.3);
+      animation: spin 20s linear infinite reverse;
+    }
+
     .disc::after {
       content: '';
-      width: 15%;
-      height: 15%;
-      background: var(--bg-color);
+      width: 20%;
+      height: 20%;
+      background: var(--neon-blue);
       border-radius: 50%;
-      position: absolute;
+      box-shadow: 0 0 15px var(--neon-blue);
     }
 
     .disc.playing { animation-play-state: running; }
     @keyframes spin { 100% { transform: rotate(360deg); } }
     
-    .song-title { font-size: 20px; font-weight: 700; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .artist-name { color: var(--text-sub); font-size: 14px; margin-bottom: 20px; }
+    .song-title { 
+      font-size: 22px; 
+      font-weight: 700; 
+      margin-bottom: 6px; 
+      text-shadow: 0 0 10px rgba(255,255,255,0.3);
+    }
+    .artist-name { color: var(--neon-blue); font-size: 14px; margin-bottom: 25px; letter-spacing: 1px; opacity: 0.8; }
     
-    /* نوار پیشرفت مدرن */
+    /* نوار پیشرفت نئونی */
     .progress-container {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 15px;
       width: 100%;
-      margin-bottom: 25px;
+      margin-bottom: 30px;
       font-size: 12px;
       color: var(--text-sub);
       font-variant-numeric: tabular-nums;
@@ -109,20 +163,21 @@
     .progress-bar {
       flex-grow: 1;
       -webkit-appearance: none;
-      height: 6px;
-      background: rgba(128, 128, 128, 0.3);
+      height: 4px;
+      background: rgba(255,255,255,0.1);
       border-radius: 10px;
       outline: none;
       cursor: pointer;
+      box-shadow: inset 0 0 5px rgba(0,0,0,0.5);
     }
     
     .progress-bar::-webkit-slider-thumb {
       -webkit-appearance: none;
-      width: 14px;
-      height: 14px;
+      width: 16px;
+      height: 16px;
       border-radius: 50%;
-      background: var(--text-main);
-      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+      background: var(--neon-blue);
+      box-shadow: 0 0 15px var(--neon-blue), 0 0 30px var(--neon-blue);
       transition: transform 0.1s;
     }
     .progress-bar::-webkit-slider-thumb:active { transform: scale(1.3); }
@@ -131,47 +186,57 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 30px;
+      gap: 35px;
     }
     
     .control-btn {
       background: none;
       border: none;
       color: var(--text-main);
-      font-size: 22px;
+      font-size: 24px;
       cursor: pointer;
-      opacity: 0.7;
-      transition: opacity 0.2s;
+      opacity: 0.6;
+      transition: all 0.3s;
+      filter: drop-shadow(0 0 5px rgba(255,255,255,0.5));
     }
-    .control-btn:active { opacity: 1; transform: scale(0.9); }
+    .control-btn:active { opacity: 1; transform: scale(0.9); filter: drop-shadow(0 0 10px var(--neon-blue)); }
 
+    /* دکمه پخش با هاله نئونی */
     .play-btn {
-      background-color: var(--primary);
-      color: var(--primary-text);
-      border: none;
-      width: 70px;
-      height: 70px;
+      background: transparent;
+      color: var(--neon-blue);
+      border: 2px solid var(--neon-blue);
+      width: 75px;
+      height: 75px;
       border-radius: 50%;
-      font-size: 28px;
+      font-size: 30px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.2);
-      transition: transform 0.1s;
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.3), inset 0 0 15px rgba(0, 240, 255, 0.3);
+      transition: all 0.2s;
+      position: relative;
     }
-    .play-btn:active { transform: scale(0.9); }
+    .play-btn:active { transform: scale(0.95); box-shadow: 0 0 40px rgba(0, 240, 255, 0.6), inset 0 0 25px rgba(0, 240, 255, 0.6); }
+    
+    /* انیمیشن هاله دکمه پخش */
+    .play-btn.pulsing { animation: pulse 2s infinite; }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(0, 240, 255, 0.4); }
+      70% { box-shadow: 0 0 0 15px rgba(0, 240, 255, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(0, 240, 255, 0); }
+    }
   </style>
 </head>
 <body>
 
   <div class="header">
     <h1>SongGram</h1>
-    <p id="welcome-text">در حال بارگذاری...</p>
+    <p id="welcome-text">در حال اتصال به شبکه...</p>
   </div>
 
   <div class="player-card">
-    <!-- کاور و دیسک چرخان -->
     <div class="cover-container">
       <div class="disc" id="disc"></div>
     </div>
@@ -187,7 +252,7 @@
     
     <div class="controls">
       <button class="control-btn" onclick="prevTrack()">⏮</button>
-      <button class="play-btn" id="playBtn" onclick="togglePlay()">▶️</button>
+      <button class="play-btn pulsing" id="playBtn" onclick="togglePlay()">▶️</button>
       <button class="control-btn" onclick="nextTrack()">⏭</button>
     </div>
   </div>
@@ -198,15 +263,14 @@
     let tg = window.Telegram.WebApp;
     tg.ready();
     tg.expand();
-
-    // تغییر رنگ هدر تلگرام برای هماهنگی بیشتر (اختیاری)
-    tg.setHeaderColor('secondary_bg_color');
+    // ست کردن هدر تلگرام به رنگ مشکی برای هماهنگی
+    tg.setHeaderColor('#050510'); 
 
     const user = tg.initDataUnsafe?.user;
     if (user) {
-      document.getElementById('welcome-text').innerText = `سلام ${user.first_name} عزیز! 👋`;
+      document.getElementById('welcome-text').innerText = `خوش آمدی ${user.first_name} عزیز 👋`;
     } else {
-      document.getElementById('welcome-text').innerText = `سلام کاربر عزیز!`;
+      document.getElementById('welcome-text').innerText = `سلام کاربر عزیز 👋`;
     }
 
     const audio = document.getElementById('audio');
@@ -219,9 +283,9 @@
     const artist = document.getElementById('artist');
 
     const playlist = [
-      { title: "آهنگ تست اول", artist: "هنرمند اول", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" },
-      { title: "آهنگ تست دوم", artist: "هنرمند دوم", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" },
-      { title: "آهنگ تست سوم", artist: "هنرمند سوم", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" }
+      { title: "صدای نئون", artist: "سازنده سایبری", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" },
+      { title: "ماتریکس", artist: "دی‌جی هولوگرام", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" },
+      { title: "سفر فضایی", artist: "کهکشان", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" }
     ];
     let trackIndex = 0;
 
@@ -235,17 +299,19 @@
     function playTrack() {
       audio.play();
       playBtn.innerHTML = '⏸';
+      playBtn.classList.remove('pulsing'); // هاله قطع میشه
       disc.classList.add('playing');
     }
 
     function pauseTrack() {
       audio.pause();
       playBtn.innerHTML = '▶️';
+      playBtn.classList.add('pulsing'); // هاله دوباره فعال میشه
       disc.classList.remove('playing');
     }
 
     function togglePlay() {
-      tg.HapticFeedback.impactOccurred('medium');
+      tg.HapticFeedback.impactOccurred('heavy'); // لرزش قوی‌تر
       if (audio.paused) {
         playTrack();
       } else {
