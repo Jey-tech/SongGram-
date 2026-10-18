@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>SongGram 2030</title>
-  <!-- وارد کردن فونت‌های گوگل -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
@@ -27,7 +26,6 @@
         radial-gradient(circle at 15% 50%, rgba(157, 0, 255, 0.15), transparent 40%),
         radial-gradient(circle at 85% 30%, rgba(0, 240, 255, 0.15), transparent 40%);
       color: var(--text-main);
-      /* فونت اصلی برای بدنه */
       font-family: 'Rajdhani', sans-serif;
       margin: 0;
       padding: 20px;
@@ -38,7 +36,7 @@
       box-sizing: border-box;
       overflow: hidden;
       position: relative;
-      direction: ltr; /* چپ‌چین کردن برای زبان انگلیسی */
+      direction: ltr;
     }
 
     body::after {
@@ -54,7 +52,6 @@
     
     .header h1 { 
       margin: 0; 
-      /* فونت تکنولوژیک برای تیتر */
       font-family: 'Orbitron', sans-serif;
       font-size: 28px; 
       font-weight: 900; 
@@ -84,12 +81,37 @@
       position: relative;
       z-index: 2;
       animation: float 6s ease-in-out infinite;
+      display: flex;
+      flex-direction: column;
     }
 
     @keyframes float {
       0% { transform: translateY(0px); }
       50% { transform: translateY(-10px); }
       100% { transform: translateY(0px); }
+    }
+
+    /* نوار بالا برای آیکون‌های پلی‌لیست و علاقه‌مندی */
+    .top-actions {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      margin-bottom: 15px;
+      padding: 0 10px;
+    }
+
+    .action-icon {
+      width: 24px;
+      height: 24px;
+      stroke: var(--text-sub);
+      fill: none;
+      stroke-width: 2;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .action-icon:hover, .action-icon:active {
+      stroke: var(--neon-purple);
+      filter: drop-shadow(0 0 8px var(--neon-purple));
     }
 
     .cover-container {
@@ -160,7 +182,7 @@
       color: var(--neon-blue); 
       font-size: 15px; 
       font-weight: 600;
-      margin-bottom: 25px; 
+      margin-bottom: 20px; 
       letter-spacing: 1px; 
       opacity: 0.8; 
     }
@@ -170,7 +192,7 @@
       align-items: center;
       gap: 15px;
       width: 100%;
-      margin-bottom: 30px;
+      margin-bottom: 25px;
       font-size: 14px;
       color: var(--text-sub);
       font-variant-numeric: tabular-nums;
@@ -203,38 +225,67 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 35px;
+      gap: 30px;
     }
     
+    /* استایل دکمه‌های کنترل سایبری */
     .control-btn {
       background: none;
       border: none;
-      color: var(--text-main);
-      font-size: 24px;
       cursor: pointer;
-      opacity: 0.6;
-      transition: all 0.3s;
-      filter: drop-shadow(0 0 5px rgba(255,255,255,0.5));
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
     }
-    .control-btn:active { opacity: 1; transform: scale(0.9); filter: drop-shadow(0 0 10px var(--neon-blue)); }
+    
+    .control-btn svg {
+      width: 32px;
+      height: 32px;
+      fill: none;
+      stroke: var(--text-main);
+      stroke-width: 2;
+      stroke-linejoin: round;
+      opacity: 0.7;
+      transition: all 0.3s;
+    }
 
+    .control-btn:active svg {
+      opacity: 1;
+      stroke: var(--neon-blue);
+      filter: drop-shadow(0 0 10px var(--neon-blue));
+      transform: scale(0.9);
+    }
+
+    /* دکمه پخش اصلی */
     .play-btn {
       background: transparent;
-      color: var(--neon-blue);
       border: 2px solid var(--neon-blue);
-      width: 75px;
-      height: 75px;
+      width: 80px;
+      height: 80px;
       border-radius: 50%;
-      font-size: 30px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 0 20px rgba(0, 240, 255, 0.3), inset 0 0 15px rgba(0, 240, 255, 0.3);
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.2), inset 0 0 15px rgba(0, 240, 255, 0.1);
       transition: all 0.2s;
       position: relative;
     }
-    .play-btn:active { transform: scale(0.95); box-shadow: 0 0 40px rgba(0, 240, 255, 0.6), inset 0 0 25px rgba(0, 240, 255, 0.6); }
+    
+    .play-btn svg {
+      width: 35px;
+      height: 35px;
+      fill: var(--neon-blue);
+      filter: drop-shadow(0 0 5px var(--neon-blue));
+      transition: all 0.3s;
+    }
+
+    .play-btn:active { 
+      transform: scale(0.95); 
+      box-shadow: 0 0 40px rgba(0, 240, 255, 0.6), inset 0 0 25px rgba(0, 240, 255, 0.4); 
+    }
     
     .play-btn.pulsing { animation: pulse 2s infinite; }
     @keyframes pulse {
@@ -252,6 +303,19 @@
   </div>
 
   <div class="player-card">
+    <!-- آیکون‌های پلی‌لیست و قلب سایبری -->
+    <div class="top-actions">
+      <!-- آیکون پلی‌لیست (خطوط تیز) -->
+      <svg class="action-icon" viewBox="0 0 24 24">
+        <path d="M4 6h16M4 12h12M4 18h16" stroke-linecap="square"/>
+        <circle cx="20" cy="12" r="1.5" fill="currentColor"/>
+      </svg>
+      <!-- آیکون قلب سایبری -->
+      <svg class="action-icon" viewBox="0 0 24 24">
+        <path d="M12 21 L3 12 L8 7 L12 11 L16 7 L21 12 Z" stroke-linejoin="miter"/>
+      </svg>
+    </div>
+
     <div class="cover-container">
       <div class="disc" id="disc"></div>
     </div>
@@ -266,9 +330,28 @@
     </div>
     
     <div class="controls">
-      <button class="control-btn" onclick="prevTrack()">⏮</button>
-      <button class="play-btn pulsing" id="playBtn" onclick="togglePlay()">▶️</button>
-      <button class="control-btn" onclick="nextTrack()">⏭</button>
+      <!-- دکمه ترک قبلی -->
+      <button class="control-btn" onclick="prevTrack()">
+        <svg viewBox="0 0 24 24">
+          <path d="M19 20 L9 12 L19 4 Z" />
+          <line x1="5" y1="4" x2="5" y2="20" />
+        </svg>
+      </button>
+      
+      <!-- دکمه پخش/توقف -->
+      <button class="play-btn pulsing" id="playBtn" onclick="togglePlay()">
+        <svg id="playIcon" viewBox="0 0 24 24">
+          <path d="M7 4 L19 12 L7 20 Z" />
+        </svg>
+      </button>
+      
+      <!-- دکمه ترک بعدی -->
+      <button class="control-btn" onclick="nextTrack()">
+        <svg viewBox="0 0 24 24">
+          <path d="M5 4 L15 12 L5 20 Z" />
+          <line x1="19" y1="4" x2="19" y2="20" />
+        </svg>
+      </button>
     </div>
   </div>
 
@@ -280,7 +363,6 @@
     tg.expand();
     tg.setHeaderColor('#050510'); 
 
-    // گرفتن اسم کاربر و انگلیسی کردن پیام خوش‌آمدگویی
     const user = tg.initDataUnsafe?.user;
     if (user) {
       document.getElementById('welcome-text').innerText = `Welcome, ${user.first_name}`;
@@ -290,6 +372,7 @@
 
     const audio = document.getElementById('audio');
     const playBtn = document.getElementById('playBtn');
+    const playIcon = document.getElementById('playIcon');
     const disc = document.getElementById('disc');
     const progress = document.getElementById('progress');
     const currTime = document.getElementById('curr-time');
@@ -297,7 +380,10 @@
     const title = document.getElementById('title');
     const artist = document.getElementById('artist');
 
-    // لیست آهنگ‌ها با اسم‌های انگلیسی
+    // آیکون‌های SVG برای تغییر وضعیت پخش
+    const SVG_PLAY = '<path d="M7 4 L19 12 L7 20 Z" />';
+    const SVG_PAUSE = '<path d="M6 4 h4 v16 h-4 Z M14 4 h4 v16 h-4 Z" />';
+
     const playlist = [
       { title: "Neon Sound", artist: "Cyber Maker", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" },
       { title: "The Matrix", artist: "Hologram DJ", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" },
@@ -314,14 +400,14 @@
 
     function playTrack() {
       audio.play();
-      playBtn.innerHTML = '⏸';
+      playIcon.innerHTML = SVG_PAUSE;
       playBtn.classList.remove('pulsing');
       disc.classList.add('playing');
     }
 
     function pauseTrack() {
       audio.pause();
-      playBtn.innerHTML = '▶️';
+      playIcon.innerHTML = SVG_PLAY;
       playBtn.classList.add('pulsing');
       disc.classList.remove('playing');
     }
