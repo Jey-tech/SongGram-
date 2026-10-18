@@ -29,15 +29,18 @@
       color: var(--text-main);
       font-family: 'Rajdhani', sans-serif;
       margin: 0;
-      padding: 70px 20px 30px 20px; 
+      /* فاصله بالا کم شد و فاصله پایین برای آیفون تنظیم شد */
+      padding: 50px 20px calc(20px + env(safe-area-inset-bottom, 20px)) 20px; 
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center; /* وسط چین کردن عمودی */
       min-height: 100vh; 
-      overflow: hidden; /* جلوگیری از اسکرول صفحه اصلی */
+      min-height: 100dvh; /* برای گوشی‌های مدرن */
       box-sizing: border-box;
       position: relative;
       direction: ltr;
+      overflow: hidden; /* جلوگیری از اسکرول اضافه */
     }
 
     body::after {
@@ -49,31 +52,31 @@
       z-index: 10;
     }
 
-    .header { width: 100%; text-align: center; margin-bottom: 25px; z-index: 2; }
+    .header { width: 100%; text-align: center; margin-bottom: 15px; z-index: 2; }
     
     .header h1 { 
       margin: 0; 
       font-family: 'Orbitron', sans-serif;
-      font-size: 28px; 
+      font-size: 24px; /* کمی کوچک‌تر شد */
       font-weight: 900; 
       background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      letter-spacing: 3px;
+      letter-spacing: 2px;
       text-transform: uppercase;
       filter: drop-shadow(0 0 10px rgba(0, 240, 255, 0.5));
     }
     
-    .header p { margin: 8px 0 0 0; color: var(--text-sub); font-size: 16px; font-weight: 600; letter-spacing: 1px; }
+    .header p { margin: 5px 0 0 0; color: var(--text-sub); font-size: 15px; font-weight: 600; }
     
     .player-card {
       background: var(--glass-bg);
       width: 100%;
-      max-width: 340px;
-      border-radius: 32px;
-      padding: 25px;
+      max-width: 320px; /* کمی باریک‌تر شد تا همه چیز جا بشه */
+      border-radius: 25px;
+      padding: 20px;
       box-shadow: 
-        0 20px 50px rgba(0,0,0,0.6),
+        0 15px 40px rgba(0,0,0,0.6),
         inset 0 0 0 1px var(--glass-border);
       text-align: center;
       box-sizing: border-box;
@@ -84,12 +87,11 @@
       animation: float 6s ease-in-out infinite;
       display: flex;
       flex-direction: column;
-      margin-bottom: 20px; 
     }
 
     @keyframes float {
       0% { transform: translateY(0px); }
-      50% { transform: translateY(-8px); }
+      50% { transform: translateY(-5px); } /* حرکت شناور ملایم‌تر شد */
       100% { transform: translateY(0px); }
     }
 
@@ -97,14 +99,14 @@
       display: flex;
       justify-content: space-between;
       width: 100%;
-      margin-bottom: 15px;
-      padding: 0 10px;
+      margin-bottom: 10px;
+      padding: 0 5px;
       z-index: 5;
     }
 
     .action-icon {
-      width: 28px;
-      height: 28px;
+      width: 24px;
+      height: 24px;
       stroke: var(--text-sub);
       fill: none;
       stroke-width: 2;
@@ -126,13 +128,12 @@
       aspect-ratio: 1 / 1;
       border-radius: 50%;
       background: linear-gradient(135deg, #1a1a2e, #16213e);
-      margin-bottom: 25px;
+      margin-bottom: 15px; /* فاصله کمتر شد */
       position: relative;
       overflow: hidden;
       box-shadow: 
-        0 0 30px rgba(0, 240, 255, 0.2),
-        0 0 60px rgba(157, 0, 255, 0.1),
-        inset 0 0 20px rgba(0,0,0,0.8);
+        0 0 20px rgba(0, 240, 255, 0.2),
+        inset 0 0 15px rgba(0,0,0,0.8);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -150,7 +151,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: inset 0 0 20px var(--neon-purple), 0 0 20px var(--neon-blue);
+      box-shadow: inset 0 0 15px var(--neon-purple), 0 0 15px var(--neon-blue);
     }
     
     .disc::before {
@@ -168,7 +169,7 @@
       height: 20%;
       background: var(--neon-blue);
       border-radius: 50%;
-      box-shadow: 0 0 15px var(--neon-blue);
+      box-shadow: 0 0 10px var(--neon-blue);
     }
 
     .disc.playing { animation-play-state: running; }
@@ -176,9 +177,9 @@
     
     .song-title { 
       font-family: 'Orbitron', sans-serif;
-      font-size: 18px; 
+      font-size: 16px; 
       font-weight: 700; 
-      margin-bottom: 8px; 
+      margin-bottom: 5px; 
       text-shadow: 0 0 10px rgba(255,255,255,0.3);
       white-space: nowrap;
       overflow: hidden;
@@ -187,20 +188,19 @@
     
     .artist-name { 
       color: var(--neon-blue); 
-      font-size: 15px; 
+      font-size: 14px; 
       font-weight: 600;
-      margin-bottom: 20px; 
-      letter-spacing: 1px; 
+      margin-bottom: 15px; 
       opacity: 0.8; 
     }
     
     .progress-container {
       display: flex;
       align-items: center;
-      gap: 15px;
+      gap: 10px;
       width: 100%;
-      margin-bottom: 25px;
-      font-size: 14px;
+      margin-bottom: 15px;
+      font-size: 12px;
       color: var(--text-sub);
       font-variant-numeric: tabular-nums;
       font-weight: 600;
@@ -214,32 +214,29 @@
       border-radius: 10px;
       outline: none;
       cursor: pointer;
-      box-shadow: inset 0 0 5px rgba(0,0,0,0.5);
     }
     
     .progress-bar::-webkit-slider-thumb {
       -webkit-appearance: none;
-      width: 16px;
-      height: 16px;
+      width: 14px;
+      height: 14px;
       border-radius: 50%;
       background: var(--neon-blue);
-      box-shadow: 0 0 15px var(--neon-blue), 0 0 30px var(--neon-blue);
-      transition: transform 0.1s;
+      box-shadow: 0 0 15px var(--neon-blue);
     }
-    .progress-bar::-webkit-slider-thumb:active { transform: scale(1.3); }
     
     .controls {
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 30px;
+      gap: 25px;
     }
     
     .control-btn {
       background: none;
       border: none;
       cursor: pointer;
-      padding: 10px;
+      padding: 5px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -247,8 +244,8 @@
     }
     
     .control-btn svg {
-      width: 32px;
-      height: 32px;
+      width: 28px;
+      height: 28px;
       fill: none;
       stroke: var(--text-main);
       stroke-width: 2;
@@ -267,60 +264,51 @@
     .play-btn {
       background: transparent;
       border: 2px solid var(--neon-blue);
-      width: 80px;
-      height: 80px;
+      width: 65px; /* سایز دکمه پخش بهینه شد */
+      height: 65px;
       border-radius: 50%;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 0 20px rgba(0, 240, 255, 0.2), inset 0 0 15px rgba(0, 240, 255, 0.1);
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.2), inset 0 0 10px rgba(0, 240, 255, 0.1);
       transition: all 0.2s;
       position: relative;
     }
     
     .play-btn svg {
-      width: 35px;
-      height: 35px;
+      width: 28px;
+      height: 28px;
       fill: var(--neon-blue);
       filter: drop-shadow(0 0 5px var(--neon-blue));
       transition: all 0.3s;
     }
 
-    .play-btn:active { 
-      transform: scale(0.95); 
-      box-shadow: 0 0 40px rgba(0, 240, 255, 0.6), inset 0 0 25px rgba(0, 240, 255, 0.4); 
-    }
-    
     .play-btn.pulsing { animation: pulse 2s infinite; }
     @keyframes pulse {
       0% { box-shadow: 0 0 0 0 rgba(0, 240, 255, 0.4); }
-      70% { box-shadow: 0 0 0 15px rgba(0, 240, 255, 0); }
+      70% { box-shadow: 0 0 0 12px rgba(0, 240, 255, 0); }
       100% { box-shadow: 0 0 0 0 rgba(0, 240, 255, 0); }
     }
 
-    /* --- استایل‌های مربوط به منوی پلی‌لیست --- */
+    /* --- Playlist Overlay --- */
     .playlist-overlay {
       position: fixed;
-      top: 100%; /* از پایین صفحه شروع میشه */
+      top: 100%;
       left: 0;
       width: 100%;
       height: 100%;
       background-color: var(--bg-color);
-      background-image: 
-        radial-gradient(circle at 50% 0%, rgba(157, 0, 255, 0.15), transparent 50%),
-        radial-gradient(circle at 50% 100%, rgba(0, 240, 255, 0.15), transparent 50%);
+      background-image: radial-gradient(circle at 50% 0%, rgba(157, 0, 255, 0.15), transparent 50%);
       z-index: 100;
       transition: top 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      padding: 70px 20px 30px 20px;
+      padding: 50px 20px calc(20px + env(safe-area-inset-bottom, 20px)) 20px;
       box-sizing: border-box;
       display: flex;
       flex-direction: column;
     }
 
-    .playlist-overlay.open {
-      top: 0;
-    }
+    .playlist-overlay.open { top: 0; }
 
     .playlist-header {
       display: flex;
@@ -335,9 +323,7 @@
       font-family: 'Orbitron', sans-serif;
       margin: 0;
       color: var(--neon-blue);
-      font-size: 22px;
-      letter-spacing: 2px;
-      text-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
+      font-size: 20px;
     }
 
     .close-btn {
@@ -348,59 +334,34 @@
       cursor: pointer;
       opacity: 0.7;
     }
-    .close-btn:active { opacity: 1; color: var(--neon-pink); }
 
     .playlist-items {
       flex-grow: 1;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
-      gap: 15px;
+      gap: 12px;
     }
 
-    /* استایل هر آهنگ در لیست */
     .playlist-item {
       background: var(--glass-bg);
       border: 1px solid var(--glass-border);
-      border-radius: 15px;
-      padding: 15px 20px;
+      border-radius: 12px;
+      padding: 12px 15px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       cursor: pointer;
-      transition: all 0.3s;
     }
 
-    .playlist-item:active {
-      background: rgba(255, 255, 255, 0.08);
-      transform: scale(0.98);
-    }
+    .playlist-item .p-title { font-family: 'Orbitron', sans-serif; font-size: 14px; color: var(--text-main); margin-bottom: 3px; }
+    .playlist-item .p-artist { font-size: 13px; color: var(--text-sub); }
 
-    .playlist-item .p-title {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 16px;
-      color: var(--text-main);
-      margin-bottom: 5px;
-    }
-
-    .playlist-item .p-artist {
-      font-size: 14px;
-      color: var(--text-sub);
-    }
-
-    /* آهنگی که در حال پخشه، هایلایت میشه */
     .playlist-item.active {
       border-color: var(--neon-pink);
-      box-shadow: 0 0 15px rgba(255, 0, 234, 0.2);
+      box-shadow: 0 0 10px rgba(255, 0, 234, 0.2);
     }
-    .playlist-item.active .p-title {
-      color: var(--neon-pink);
-      text-shadow: 0 0 8px rgba(255, 0, 234, 0.5);
-    }
-    .playlist-item.active .p-artist {
-      color: var(--neon-pink);
-      opacity: 0.7;
-    }
+    .playlist-item.active .p-title { color: var(--neon-pink); }
   </style>
 </head>
 <body>
@@ -412,12 +373,10 @@
 
   <div class="player-card">
     <div class="top-actions">
-      <!-- Playlist Icon (حالا کلیک پذیر شده) -->
       <svg class="action-icon" viewBox="0 0 24 24" onclick="togglePlaylist()">
         <path d="M4 6h16M4 12h12M4 18h16" stroke-linecap="square"/>
         <circle cx="20" cy="12" r="1.5" fill="currentColor"/>
       </svg>
-      <!-- Heart Icon -->
       <svg class="action-icon" id="favIcon" viewBox="0 0 24 24" onclick="toggleFavorite()">
         <path d="M12 21 L3 12 L8 7 L12 11 L16 7 L21 12 Z" stroke-linejoin="miter"/>
       </svg>
@@ -459,15 +418,12 @@
     </div>
   </div>
 
-  <!-- منوی کشویی پلی‌لیست -->
   <div class="playlist-overlay" id="playlistOverlay">
     <div class="playlist-header">
       <h2>Playlist</h2>
       <button class="close-btn" onclick="togglePlaylist()">✕</button>
     </div>
-    <div class="playlist-items" id="playlistItems">
-      <!-- آهنگ‌ها با جاوااسکریپت اینجا ساخته میشن -->
-    </div>
+    <div class="playlist-items" id="playlistItems"></div>
   </div>
 
   <audio id="audio" src=""></audio>
@@ -479,11 +435,8 @@
     tg.setHeaderColor('#050510'); 
 
     const user = tg.initDataUnsafe?.user;
-    if (user) {
-      document.getElementById('welcome-text').innerText = `Welcome, ${user.first_name}`;
-    } else {
-      document.getElementById('welcome-text').innerText = `Welcome, Guest`;
-    }
+    if (user) document.getElementById('welcome-text').innerText = `Welcome, ${user.first_name}`;
+    else document.getElementById('welcome-text').innerText = `Welcome, Guest`;
 
     const audio = document.getElementById('audio');
     const playBtn = document.getElementById('playBtn');
@@ -508,41 +461,28 @@
       { id: 4, title: "Cyberpunk City", artist: "Synthwave", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3" }
     ];
     let trackIndex = 0;
-
     let favorites = JSON.parse(localStorage.getItem('songgram_favs')) || [];
 
-    // تابع ساخت لیست آهنگ‌ها در منو
     function renderPlaylist() {
-      playlistItemsContainer.innerHTML = ''; // پاک کردن لیست قبلی
-      
+      playlistItemsContainer.innerHTML = '';
       playlist.forEach((song, index) => {
         const item = document.createElement('div');
-        // اگر آهنگ در حال پخش بود، کلاس active بگیره
         item.className = `playlist-item ${index === trackIndex ? 'active' : ''}`;
-        item.innerHTML = `
-          <div>
-            <div class="p-title">${song.title}</div>
-            <div class="p-artist">${song.artist}</div>
-          </div>
-        `;
-        // وقتی روی آهنگ کلیک شد
+        item.innerHTML = `<div><div class="p-title">${song.title}</div><div class="p-artist">${song.artist}</div></div>`;
         item.onclick = () => {
           trackIndex = index;
           loadTrack(trackIndex);
           playTrack();
-          togglePlaylist(); // بستن منو
+          togglePlaylist();
         };
         playlistItemsContainer.appendChild(item);
       });
     }
 
-    // باز و بسته کردن منو
     function togglePlaylist() {
       tg.HapticFeedback.impactOccurred('medium');
       playlistOverlay.classList.toggle('open');
-      if (playlistOverlay.classList.contains('open')) {
-        renderPlaylist(); // هر بار که باز شد لیست آپدیت بشه
-      }
+      if (playlistOverlay.classList.contains('open')) renderPlaylist();
     }
 
     function loadTrack(index) {
@@ -555,23 +495,15 @@
 
     function updateFavoriteIcon() {
       const currentTrackId = playlist[trackIndex].id;
-      if (favorites.includes(currentTrackId)) {
-        favIcon.classList.add('favorited');
-      } else {
-        favIcon.classList.remove('favorited');
-      }
+      if (favorites.includes(currentTrackId)) favIcon.classList.add('favorited');
+      else favIcon.classList.remove('favorited');
     }
 
     function toggleFavorite() {
       tg.HapticFeedback.impactOccurred('medium');
       const currentTrackId = playlist[trackIndex].id;
-      
-      if (favorites.includes(currentTrackId)) {
-        favorites = favorites.filter(id => id !== currentTrackId);
-      } else {
-        favorites.push(currentTrackId);
-      }
-      
+      if (favorites.includes(currentTrackId)) favorites = favorites.filter(id => id !== currentTrackId);
+      else favorites.push(currentTrackId);
       localStorage.setItem('songgram_favs', JSON.stringify(favorites));
       updateFavoriteIcon();
     }
@@ -592,11 +524,8 @@
 
     function togglePlay() {
       tg.HapticFeedback.impactOccurred('heavy');
-      if (audio.paused) {
-        playTrack();
-      } else {
-        pauseTrack();
-      }
+      if (audio.paused) playTrack();
+      else pauseTrack();
     }
 
     function nextTrack() {
