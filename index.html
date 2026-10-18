@@ -22,7 +22,7 @@
       --glass-border: rgba(255, 255, 255, 0.6);
       --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
       --nav-height: 70px;
-      --mini-player-height: 65px;
+      --mini-player-height: 60px;
     }
 
     * { box-sizing: border-box; }
@@ -40,16 +40,36 @@
       direction: ltr;
     }
 
+    /* --- هدر (Header) --- */
+    .app-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 20px;
+      padding-top: calc(15px + env(safe-area-inset-top, 0px));
+      z-index: 10;
+    }
+
+    .logo {
+      font-size: 22px;
+      font-weight: 800;
+      background: linear-gradient(90deg, #8b5cf6, #d946ef);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 1px;
+      cursor: pointer;
+    }
+
+    .profile-btn { width: 40px; height: 40px; display: flex; justify-content: center; align-items: center; cursor: pointer; border-radius: 50%; background: var(--glass-bg); border: 1px solid var(--glass-border); }
+    .profile-btn img { width: 32px; height: 32px; border-radius: 50%; }
+
     /* --- محتوای اصلی --- */
     .app-content {
       flex-grow: 1;
       overflow-y: auto;
-      padding: 20px;
-      padding-top: calc(20px + env(safe-area-inset-top, 0px));
-      /* فاصله پایین بیشتر شد تا نوار مینی پلیر روی محتوا نیفته */
-      padding-bottom: calc(var(--nav-height) + var(--mini-player-height) + 30px + env(safe-area-inset-bottom, 20px));
+      padding: 10px 20px;
+      padding-bottom: calc(var(--nav-height) + env(safe-area-inset-bottom, 20px));
       position: relative;
-      transition: padding-bottom 0.3s ease;
     }
     
     .app-content::-webkit-scrollbar { display: none; }
@@ -58,9 +78,9 @@
       display: none;
       animation: fadeIn 0.3s ease;
     }
-    .view-section.active { display: block; }
+    .view-section.active { display: block; height: 100%; }
 
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
     /* --- استایل‌های عمومی --- */
     .glass-panel {
@@ -72,157 +92,126 @@
       border-radius: 24px;
     }
 
-    .section-title {
-      font-size: 16px;
-      font-weight: 700;
-      margin: 20px 0 10px 0;
+    /* --- صفحه اصلی (Home = Player) --- */
+    #home-view {
       display: flex;
-      justify-content: space-between;
+      flex-direction: column;
+      justify-content: center;
       align-items: center;
+      padding-bottom: 20px;
     }
-    .section-title span { font-size: 12px; color: var(--primary); font-weight: 600; cursor: pointer; }
-
-    /* --- هدر صفحه اصلی (Home) --- */
-    .home-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-    .menu-btn, .profile-btn { width: 40px; height: 40px; display: flex; justify-content: center; align-items: center; cursor: pointer; border-radius: 50%; background: var(--glass-bg); border: 1px solid var(--glass-border); }
-    .profile-btn img { width: 32px; height: 32px; border-radius: 50%; }
-    .greeting { font-size: 14px; color: var(--text-light); margin-bottom: 15px; }
-    .greeting h1 { margin: 5px 0 0 0; font-size: 22px; color: var(--text-dark); }
-
-    /* --- نوار جستجو --- */
-    .search-bar {
-      display: flex; align-items: center; gap: 10px;
-      background: var(--glass-bg); border: 1px solid var(--glass-border);
-      padding: 12px 16px; border-radius: 16px; margin-bottom: 20px;
-    }
-    .search-bar input { border: none; background: transparent; outline: none; flex-grow: 1; font-family: 'Plus Jakarta Sans'; color: var(--text-dark); font-size: 14px; }
-    .search-bar input::placeholder { color: var(--text-light); }
-
-    /* --- کارت Today's Pick --- */
-    .hero-card {
-      position: relative; height: 180px; border-radius: 24px; overflow: hidden; margin-bottom: 20px;
-      background: linear-gradient(45deg, #a78bfa, #f472b6);
-      display: flex; flex-direction: column; justify-content: center; padding: 20px;
-      color: white; cursor: pointer;
-    }
-    .hero-card::before {
-      content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      background: url('https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=1000&auto=format&fit=crop') center/cover;
-      opacity: 0.4; z-index: 1; mix-blend-mode: overlay;
-    }
-    .hero-content { position: relative; z-index: 2; }
-    .hero-content p { margin: 0; font-size: 12px; font-weight: 600; opacity: 0.9; }
-    .hero-content h2 { margin: 5px 0; font-size: 26px; font-weight: 800; line-height: 1.2; }
-    .hero-content span { font-size: 12px; opacity: 0.8; }
-    .play-hero-btn {
-      position: absolute; bottom: 20px; right: 20px; width: 45px; height: 45px;
-      background: white; border-radius: 50%; display: flex; justify-content: center; align-items: center;
-      z-index: 2; box-shadow: 0 4px 15px rgba(0,0,0,0.2); cursor: pointer; border: none;
-    }
-    .play-hero-btn svg { width: 20px; height: 20px; fill: var(--primary); margin-left: 3px; }
-
-    /* --- دسته‌بندی‌ها --- */
-    .categories { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 10px; }
-    .categories::-webkit-scrollbar { display: none; }
-    .category-item { display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; min-width: 60px; }
-    .cat-icon {
-      width: 60px; height: 60px; border-radius: 50%; display: flex; justify-content: center; align-items: center;
-      background: var(--glass-bg); border: 1px solid var(--glass-border);
-      box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition: all 0.3s;
-    }
-    .cat-icon svg { width: 24px; height: 24px; stroke: var(--primary); fill: none; stroke-width: 2; }
-    .category-item span { font-size: 12px; font-weight: 600; color: var(--text-dark); }
-    .category-item:active .cat-icon { transform: scale(0.9); }
-
-    /* --- لیست آهنگ‌ها --- */
-    .song-list { display: flex; flex-direction: column; gap: 12px; }
-    .song-item {
-      display: flex; align-items: center; gap: 15px;
-      background: var(--glass-bg); border: 1px solid var(--glass-border);
-      padding: 10px; border-radius: 16px; cursor: pointer; transition: all 0.2s;
-    }
-    .song-item:active { transform: scale(0.98); background: rgba(255,255,255,0.6); }
-    .song-cover { width: 50px; height: 50px; border-radius: 12px; display: flex; justify-content: center; align-items: center; }
-    .song-cover svg { width: 24px; height: 24px; fill: white; }
-    .song-info { flex-grow: 1; text-align: left; }
-    .song-info h4 { margin: 0 0 4px 0; font-size: 14px; font-weight: 700; color: var(--text-dark); }
-    .song-info p { margin: 0; font-size: 12px; color: var(--text-light); font-weight: 500; }
-    .play-small-btn { width: 35px; height: 35px; border-radius: 50%; background: rgba(255,255,255,0.7); display: flex; justify-content: center; align-items: center; border: none; }
-    .play-small-btn svg { width: 16px; height: 16px; fill: var(--primary); margin-left: 2px; }
-
-    /* --- صفحه کتابخانه (Library) --- */
-    .lib-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-    .lib-header h1 { margin: 0; font-size: 24px; color: var(--text-dark); }
-    .lib-tabs { display: flex; gap: 10px; margin-bottom: 20px; overflow-x: auto; }
-    .lib-tabs::-webkit-scrollbar { display: none; }
-    .lib-tab {
-      padding: 8px 16px; border-radius: 20px; font-size: 14px; font-weight: 600; cursor: pointer;
-      background: transparent; color: var(--text-light); border: 1px solid var(--glass-border);
-    }
-    .lib-tab.active { background: var(--primary); color: white; border-color: var(--primary); box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4); }
-    
-    .create-playlist-btn {
-      display: flex; align-items: center; gap: 15px; padding: 15px;
-      border-radius: 16px; border: 2px dashed var(--primary-light); background: transparent; cursor: pointer; width: 100%; margin-bottom: 15px;
-    }
-    .create-playlist-btn .plus-icon { width: 45px; height: 45px; border-radius: 12px; background: var(--primary-light); display: flex; justify-content: center; align-items: center; }
-    .create-playlist-btn .plus-icon svg { width: 20px; height: 20px; stroke: white; }
-    .create-playlist-btn div { text-align: left; }
-    .create-playlist-btn h4 { margin: 0; font-size: 15px; color: var(--text-dark); }
-    .create-playlist-btn p { margin: 3px 0 0 0; font-size: 12px; color: var(--text-light); }
-
-    /* --- صفحه پلیر (Now Playing) --- */
-    .player-screen {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: linear-gradient(135deg, var(--bg-grad-2) 0%, var(--bg-grad-1) 100%);
-      z-index: 100; display: flex; flex-direction: column; padding: 20px;
-      padding-top: calc(20px + env(safe-area-inset-top, 0px));
-      padding-bottom: calc(20px + env(safe-area-inset-bottom, 20px));
-      transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-    .player-screen.open { transform: translateY(0); }
-
-    .player-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
-    .close-player { background: transparent; border: none; cursor: pointer; padding: 10px; }
-    .close-player svg { width: 24px; height: 24px; stroke: var(--text-dark); }
-    .player-header-text { text-align: center; }
-    .player-header-text h5 { margin: 0; font-size: 12px; color: var(--text-light); text-transform: uppercase; letter-spacing: 1px; }
-    .player-header-text h3 { margin: 5px 0 0 0; font-size: 16px; color: var(--text-dark); }
 
     .album-art-container {
-      width: 100%; aspect-ratio: 1/1; border-radius: 30px; overflow: hidden;
-      box-shadow: 0 20px 40px rgba(139, 92, 246, 0.3); margin-bottom: 30px; position: relative;
+      width: 85vw; 
+      max-width: 320px;
+      aspect-ratio: 1/1; 
+      border-radius: 50%; /* گرد کردن کاور */
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(139, 92, 246, 0.3); 
+      margin-bottom: 30px; 
+      position: relative;
+      border: 4px solid rgba(255, 255, 255, 0.5);
+      transition: transform 0.3s ease;
     }
-    .album-art-placeholder { width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; }
-    .album-art-placeholder svg { width: 80px; height: 80px; fill: white; opacity: 0.5; }
-
-    .player-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-    .player-info-text h2 { margin: 0 0 5px 0; font-size: 24px; color: var(--text-dark); font-weight: 800; }
-    .player-info-text p { margin: 0; font-size: 16px; color: var(--text-light); font-weight: 600; }
     
-    .heart-btn { background: var(--glass-bg); border: 1px solid var(--glass-border); width: 45px; height: 45px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; }
-    .heart-btn svg { width: 22px; height: 22px; stroke: var(--text-light); fill: none; transition: all 0.3s; }
+    .album-art-placeholder { 
+      width: 100%; height: 100%; 
+      display: flex; justify-content: center; align-items: center; 
+      background: linear-gradient(45deg, #a78bfa, #f472b6); /* رنگ پیش‌فرض */
+    }
+    .album-art-placeholder svg { width: 100px; height: 100px; fill: white; opacity: 0.4; }
+    
+    /* انیمیشن چرخش کاور وقتی در حال پخشه */
+    .album-art-container.playing {
+      animation: spin 15s linear infinite;
+    }
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+
+    .player-info { display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 320px; margin-bottom: 25px; }
+    .player-info-text { text-align: left; overflow: hidden; }
+    .player-info-text h2 { margin: 0 0 5px 0; font-size: 22px; color: var(--text-dark); font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 220px; }
+    .player-info-text p { margin: 0; font-size: 15px; color: var(--text-light); font-weight: 600; }
+    
+    .heart-btn { background: var(--glass-bg); border: 1px solid var(--glass-border); width: 45px; height: 45px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; flex-shrink: 0; }
+    .heart-btn svg { width: 20px; height: 20px; stroke: var(--text-light); fill: none; transition: all 0.3s; }
     .heart-btn.active { background: #fce7f3; border-color: #fbcfe8; }
     .heart-btn.active svg { stroke: #db2777; fill: #db2777; }
 
-    .player-progress { margin-bottom: 30px; }
+    .player-progress { width: 100%; max-width: 320px; margin-bottom: 30px; }
     .progress-bar-container { height: 6px; background: rgba(0,0,0,0.1); border-radius: 10px; overflow: hidden; margin-bottom: 10px; position: relative; }
     .progress-fill { height: 100%; background: var(--primary); width: 0%; border-radius: 10px; }
     .progress-time { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-light); font-weight: 600; }
     input[type=range].seek-slider { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; margin: 0; }
 
-    .player-controls { display: flex; justify-content: space-between; align-items: center; padding: 0 10px; }
+    .player-controls { display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 320px; padding: 0 10px; }
     .control-btn { background: transparent; border: none; cursor: pointer; display: flex; justify-content: center; align-items: center; }
     .control-btn svg { width: 28px; height: 28px; fill: var(--text-light); }
     .play-pause-btn { width: 70px; height: 70px; background: var(--text-dark); border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
     .play-pause-btn svg { width: 30px; height: 30px; fill: white; }
     .play-pause-btn svg.play-icon { margin-left: 4px; }
 
-    .player-bottom-bar {
-      display: flex; justify-content: space-around; align-items: center; margin-top: auto;
-      background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; padding: 15px;
+    /* --- صفحه کتابخانه (Library) --- */
+    .lib-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; margin-top: 10px; }
+    .lib-header h1 { margin: 0; font-size: 24px; color: var(--text-dark); }
+    
+    .song-list { display: flex; flex-direction: column; gap: 12px; padding-bottom: 80px; }
+    .song-item {
+      display: flex; align-items: center; gap: 15px;
+      background: var(--glass-bg); border: 1px solid var(--glass-border);
+      padding: 10px; border-radius: 16px; cursor: pointer; transition: all 0.2s;
     }
-    .player-bottom-bar svg { width: 20px; height: 20px; stroke: var(--text-light); }
+    .song-item:active { transform: scale(0.98); background: rgba(255,255,255,0.6); }
+    .song-cover { width: 50px; height: 50px; border-radius: 12px; display: flex; justify-content: center; align-items: center; flex-shrink: 0;}
+    .song-cover svg { width: 24px; height: 24px; fill: white; }
+    .song-info { flex-grow: 1; text-align: left; overflow: hidden; }
+    .song-info h4 { margin: 0 0 4px 0; font-size: 14px; font-weight: 700; color: var(--text-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
+    .song-info p { margin: 0; font-size: 12px; color: var(--text-light); font-weight: 500; }
+    .play-small-btn { width: 35px; height: 35px; border-radius: 50%; background: rgba(255,255,255,0.7); display: flex; justify-content: center; align-items: center; border: none; flex-shrink: 0; }
+    .play-small-btn svg { width: 16px; height: 16px; fill: var(--primary); margin-left: 2px; }
+
+    /* --- مینی پلیر (Mini Player) --- */
+    .mini-player {
+      position: fixed;
+      bottom: calc(var(--nav-height) + 8px);
+      left: 15px;
+      right: 15px;
+      height: var(--mini-player-height);
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 18px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+      display: flex; align-items: center; padding: 0 10px; gap: 12px;
+      transform: translateY(150%);
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      z-index: 60;
+      cursor: pointer;
+    }
+    .mini-player.show { transform: translateY(0); }
+
+    .mini-progress-bg {
+      position: absolute; top: 0; left: 0; width: 100%; height: 3px;
+      background: rgba(0,0,0,0.05); border-radius: 18px 18px 0 0; overflow: hidden;
+    }
+    .mini-progress-fill { height: 100%; background: var(--primary); width: 0%; transition: width 0.2s; }
+
+    .mini-cover {
+      width: 40px; height: 40px; border-radius: 10px;
+      display: flex; justify-content: center; align-items: center; flex-shrink: 0;
+    }
+    .mini-cover svg { width: 18px; height: 18px; fill: white; }
+    
+    .mini-info { flex-grow: 1; overflow: hidden; text-align: left; }
+    .mini-info h4 { margin: 0 0 2px 0; font-size: 13px; font-weight: 700; color: var(--text-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .mini-info p { margin: 0; font-size: 11px; color: var(--text-light); font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    
+    .mini-play-btn {
+      width: 38px; height: 38px; border-radius: 50%;
+      background: var(--primary); border: none; display: flex; justify-content: center; align-items: center;
+      cursor: pointer; box-shadow: 0 4px 10px rgba(139, 92, 246, 0.3); flex-shrink: 0;
+    }
+    .mini-play-btn svg { width: 16px; height: 16px; fill: white; }
+    .mini-play-btn svg.play-icon { margin-left: 2px; }
 
     /* --- نوار ناوبری پایین (Bottom Nav) --- */
     .bottom-nav {
@@ -247,152 +236,79 @@
     .nav-item.active svg { stroke: white; }
     .nav-item.active span { display: block; color: white; }
 
-    /* --- مینی پلیر (Mini Player) --- */
-    .mini-player {
-      position: fixed;
-      bottom: calc(var(--nav-height) + 8px); /* بالای نوار ناوبری */
-      left: 15px;
-      right: 15px;
-      height: var(--mini-player-height);
-      background: rgba(255, 255, 255, 0.85);
-      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-      border: 1px solid var(--glass-border);
-      border-radius: 20px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-      display: flex; align-items: center; padding: 0 10px; gap: 12px;
-      transform: translateY(150%); /* مخفی در حالت اولیه */
-      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      z-index: 60;
-      cursor: pointer;
-    }
-    .mini-player.show { transform: translateY(0); }
-
-    .mini-progress-bg {
-      position: absolute; top: 0; left: 0; width: 100%; height: 3px;
-      background: rgba(0,0,0,0.05); border-radius: 20px 20px 0 0; overflow: hidden;
-    }
-    .mini-progress-fill { height: 100%; background: var(--primary); width: 0%; transition: width 0.2s; }
-
-    .mini-cover {
-      width: 42px; height: 42px; border-radius: 12px;
-      display: flex; justify-content: center; align-items: center; flex-shrink: 0;
-    }
-    .mini-cover svg { width: 20px; height: 20px; fill: white; }
-    
-    .mini-info { flex-grow: 1; overflow: hidden; text-align: left; }
-    .mini-info h4 { margin: 0 0 2px 0; font-size: 13px; font-weight: 700; color: var(--text-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .mini-info p { margin: 0; font-size: 11px; color: var(--text-light); font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    
-    .mini-play-btn {
-      width: 40px; height: 40px; border-radius: 50%;
-      background: var(--primary); border: none; display: flex; justify-content: center; align-items: center;
-      cursor: pointer; box-shadow: 0 4px 10px rgba(139, 92, 246, 0.3); flex-shrink: 0;
-    }
-    .mini-play-btn svg { width: 18px; height: 18px; fill: white; }
-    .mini-play-btn svg.play-icon { margin-left: 2px; }
-
   </style>
 </head>
 <body>
 
-  <!-- ================= صفحه اصلی (Home) ================= -->
-  <main class="app-content" id="main-content">
+  <!-- Header -->
+  <header class="app-header">
+    <div class="logo" onclick="switchTab('home', document.querySelector('.nav-item'))">SONGGRAM</div>
+    <div class="profile-btn"><img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Jey" alt="User"></div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="app-content">
+    
+    <!-- Home View (Main Player) -->
     <section id="home-view" class="view-section active">
-      <header class="home-header">
-        <div class="menu-btn"><svg viewBox="0 0 24 24" width="24" height="24" stroke="#1e1b4b" stroke-width="2" fill="none"><path d="M4 6h16M4 12h16M4 18h16"/></svg></div>
-        <div class="profile-btn"><img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Jey" alt="User"></div>
-      </header>
-
-      <div class="greeting">
-        <p>Good Morning</p>
-        <h1 id="user-name">Loading... 👋</h1>
-      </div>
-
-      <div class="search-bar">
-        <svg viewBox="0 0 24 24" width="20" height="20" stroke="#6b7280" stroke-width="2" fill="none"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input type="text" placeholder="Search songs, artists...">
-        <svg viewBox="0 0 24 24" width="20" height="20" stroke="#8b5cf6" stroke-width="2" fill="none"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></svg>
-      </div>
-
-      <div class="hero-card" onclick="openPlayer(0)">
-        <div class="hero-content">
-          <p>Today's Pick</p>
-          <h2>Dreamy<br>Escape</h2>
-          <span>Chill Vibes • 50 Songs</span>
+      
+      <div class="album-art-container" id="fullPlayerCover">
+        <div class="album-art-placeholder">
+           <svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
         </div>
-        <button class="play-hero-btn">
-          <svg viewBox="0 0 24 24"><path d="M7 4 L19 12 L7 20 Z" /></svg>
+      </div>
+
+      <div class="player-info">
+        <div class="player-info-text">
+          <h2 id="player-title">Song Title</h2>
+          <p id="player-artist">Artist</p>
+        </div>
+        <button class="heart-btn" id="player-heart" onclick="toggleLike()">
+          <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
         </button>
       </div>
 
-      <div class="section-title">Categories <span>See All</span></div>
-      <div class="categories">
-        <div class="category-item">
-          <div class="cat-icon"><svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div>
-          <span>Pop</span>
+      <div class="player-progress">
+        <div class="progress-bar-container">
+          <div class="progress-fill" id="player-progress-fill"></div>
+          <input type="range" class="seek-slider" id="seekSlider" value="0" min="0" max="100" step="0.1">
         </div>
-        <div class="category-item">
-          <div class="cat-icon"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10H12V2z"/><path d="M12 2a10 10 0 0 1 10 10"/></svg></div>
-          <span>Chill</span>
-        </div>
-        <div class="category-item">
-          <div class="cat-icon"><svg viewBox="0 0 24 24"><path d="M6 4v16M18 4v16M6 12h12"/></svg></div>
-          <span>Workout</span>
-        </div>
-        <div class="category-item">
-          <div class="cat-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 12h8M12 8v8"/></svg></div>
-          <span>Party</span>
+        <div class="progress-time">
+          <span id="player-curr-time">0:00</span>
+          <span id="player-total-time">0:00</span>
         </div>
       </div>
 
-      <div class="section-title">Recently Played <span>See All</span></div>
-      <div class="song-list" id="recent-list">
+      <div class="player-controls">
+        <button class="control-btn"><svg viewBox="0 0 24 24"><path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg></button>
+        <button class="control-btn" onclick="prevTrack()"><svg viewBox="0 0 24 24"><path d="M19 20L9 12l10-8v16zM5 19V5"/></svg></button>
+        <button class="play-pause-btn" id="playPauseBtn" onclick="togglePlay()">
+          <svg class="play-icon" id="mainPlayIcon" viewBox="0 0 24 24"><path d="M7 4 L19 12 L7 20 Z" /></svg>
+        </button>
+        <button class="control-btn" onclick="nextTrack()"><svg viewBox="0 0 24 24"><path d="M5 4l10 8-10 8V4zM19 5v14"/></svg></button>
+        <button class="control-btn"><svg viewBox="0 0 24 24"><path d="M17 2.1l4 4-4 4"/><path d="M3 12.2v-1a9 9 0 0 1 9-9h8.1"/><path d="M7 21.9l-4-4 4-4"/><path d="M21 11.8v1a9 9 0 0 1-9 9H3.9"/></svg></button>
+      </div>
+
+    </section>
+
+    <!-- Library View -->
+    <section id="library-view" class="view-section">
+      <div class="lib-header">
+        <h1>My Library</h1>
+      </div>
+      <div class="song-list" id="song-list-container">
         <!-- Generated via JS -->
       </div>
     </section>
 
-    <!-- ================= صفحه کتابخانه (Library) ================= -->
-    <section id="library-view" class="view-section">
-      <div class="lib-header">
-        <h1>My Library</h1>
-        <div style="display:flex; gap:10px;">
-          <div class="menu-btn" style="width:35px;height:35px;"><svg viewBox="0 0 24 24" width="18" height="18" stroke="#1e1b4b" stroke-width="2" fill="none"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
-          <div class="menu-btn" style="width:35px;height:35px;"><svg viewBox="0 0 24 24" width="18" height="18" stroke="#1e1b4b" stroke-width="2" fill="none"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
-        </div>
-      </div>
+    <!-- Placeholder Views -->
+    <section id="explore-view" class="view-section"><h2 style="text-align:center; margin-top:50px;">Explore coming soon...</h2></section>
+    <section id="premium-view" class="view-section"><h2 style="text-align:center; margin-top:50px;">Premium coming soon...</h2></section>
 
-      <div class="lib-tabs">
-        <div class="lib-tab active">Playlists</div>
-        <div class="lib-tab">Songs</div>
-        <div class="lib-tab">Albums</div>
-        <div class="lib-tab">Artists</div>
-      </div>
-
-      <button class="create-playlist-btn">
-        <div class="plus-icon"><svg viewBox="0 0 24 24" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
-        <div>
-          <h4>Create New Playlist</h4>
-          <p>Build your own collection</p>
-        </div>
-      </button>
-
-      <div class="song-list">
-        <div class="song-item" onclick="openPlayer(1)">
-          <div class="song-cover" style="background: linear-gradient(45deg, #8b5cf6, #d946ef);"><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></div>
-          <div class="song-info"><h4>Favorites</h4><p>128 Songs</p></div>
-          <button class="play-small-btn"><svg viewBox="0 0 24 24"><path d="M7 4 L19 12 L7 20 Z" /></svg></button>
-        </div>
-        <div class="song-item" onclick="openPlayer(2)">
-          <div class="song-cover" style="background: linear-gradient(45deg, #f59e0b, #ef4444);"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10H12V2z"/></svg></div>
-          <div class="song-info"><h4>Workout Hits</h4><p>56 Songs</p></div>
-          <button class="play-small-btn"><svg viewBox="0 0 24 24"><path d="M7 4 L19 12 L7 20 Z" /></svg></button>
-        </div>
-      </div>
-    </section>
   </main>
 
-  <!-- ================= نوار مینی پلیر (Mini Player) ================= -->
-  <div class="mini-player" id="miniPlayer" onclick="openFullPlayerFromMini()">
+  <!-- Mini Player (Hidden by default) -->
+  <div class="mini-player" id="miniPlayer" onclick="switchTab('home', document.querySelector('.nav-item'))">
     <div class="mini-progress-bg">
       <div class="mini-progress-fill" id="miniProgressFill"></div>
     </div>
@@ -408,60 +324,7 @@
     </button>
   </div>
 
-  <!-- ================= صفحه پلیر (Now Playing) ================= -->
-  <div class="player-screen" id="playerScreen">
-    <header class="player-header">
-      <button class="close-player" onclick="closePlayer()">
-        <svg viewBox="0 0 24 24" stroke-width="2" fill="none"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-      </button>
-      <div class="player-header-text">
-        <h5>Now Playing</h5>
-        <h3 id="player-playlist-name">Playlist</h3>
-      </div>
-      <button class="close-player">
-        <svg viewBox="0 0 24 24" stroke-width="2" fill="none"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
-      </button>
-    </header>
-
-    <div class="album-art-container" id="fullPlayerCover">
-      <div class="album-art-placeholder">
-         <svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
-      </div>
-    </div>
-
-    <div class="player-info">
-      <div class="player-info-text">
-        <h2 id="player-title">Song Title</h2>
-        <p id="player-artist">Artist</p>
-      </div>
-      <button class="heart-btn" id="player-heart" onclick="toggleLike()">
-        <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-      </button>
-    </div>
-
-    <div class="player-progress">
-      <div class="progress-bar-container">
-        <div class="progress-fill" id="player-progress-fill"></div>
-        <input type="range" class="seek-slider" id="seekSlider" value="0" min="0" max="100" step="0.1">
-      </div>
-      <div class="progress-time">
-        <span id="player-curr-time">0:00</span>
-        <span id="player-total-time">0:00</span>
-      </div>
-    </div>
-
-    <div class="player-controls">
-      <button class="control-btn"><svg viewBox="0 0 24 24"><path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg></button>
-      <button class="control-btn" onclick="prevTrack()"><svg viewBox="0 0 24 24"><path d="M19 20L9 12l10-8v16zM5 19V5"/></svg></button>
-      <button class="play-pause-btn" id="playPauseBtn" onclick="togglePlay()">
-        <svg class="play-icon" id="mainPlayIcon" viewBox="0 0 24 24"><path d="M7 4 L19 12 L7 20 Z" /></svg>
-      </button>
-      <button class="control-btn" onclick="nextTrack()"><svg viewBox="0 0 24 24"><path d="M5 4l10 8-10 8V4zM19 5v14"/></svg></button>
-      <button class="control-btn"><svg viewBox="0 0 24 24"><path d="M17 2.1l4 4-4 4"/><path d="M3 12.2v-1a9 9 0 0 1 9-9h8.1"/><path d="M7 21.9l-4-4 4-4"/><path d="M21 11.8v1a9 9 0 0 1-9 9H3.9"/></svg></button>
-    </div>
-  </div>
-
-  <!-- ================= نوار ناوبری پایین ================= -->
+  <!-- Bottom Nav -->
   <nav class="bottom-nav">
     <div class="nav-item active" onclick="switchTab('home', this)">
       <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
@@ -492,16 +355,20 @@
     tg.enableClosingConfirmation(); 
 
     const user = tg.initDataUnsafe?.user;
-    if (user) document.getElementById('user-name').innerText = `${user.first_name} 👋`;
+    // اگر اسم کاربر لود نشد، یک اسم پیش‌فرض می‌ذاریم
+    if (user) {
+      document.querySelector('.profile-btn img').src = user.photo_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.first_name}`;
+    }
 
     const allSongs = [
       { id: 1, title: "Blinding Lights", artist: "The Weeknd", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3", coverColor: "linear-gradient(45deg, #c4b5fd, #f9a8d4)" },
       { id: 2, title: "Peaches", artist: "Justin Bieber", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3", coverColor: "linear-gradient(45deg, #fca5a5, #fbbf24)" },
-      { id: 3, title: "Neon Sound", artist: "Cyber Maker", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3", coverColor: "linear-gradient(45deg, #6ee7b7, #3b82f6)" }
+      { id: 3, title: "Neon Sound", artist: "Cyber Maker", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3", coverColor: "linear-gradient(45deg, #6ee7b7, #3b82f6)" },
+      { id: 4, title: "Space Journey", artist: "Galaxy", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3", coverColor: "linear-gradient(45deg, #1e1b4b, #8b5cf6)" }
     ];
 
-    // رندر لیست اخیر
-    const recentList = document.getElementById('recent-list');
+    // رندر لیست لایبرری
+    const songListContainer = document.getElementById('song-list-container');
     allSongs.forEach((song, index) => {
       const el = document.createElement('div');
       el.className = 'song-item';
@@ -515,15 +382,18 @@
         </div>
         <button class="play-small-btn"><svg viewBox="0 0 24 24"><path d="M7 4 L19 12 L7 20 Z" /></svg></button>
       `;
-      el.onclick = () => openPlayer(index);
-      recentList.appendChild(el);
+      el.onclick = () => {
+        currentTrackIndex = index;
+        loadTrackAndPlay();
+        switchTab('home', document.querySelectorAll('.nav-item')[0]); // رفتن به صفحه پلیر
+      };
+      songListContainer.appendChild(el);
     });
 
     // --- المان‌های پلیر ---
     const audio = document.getElementById('audioElement');
-    const playerScreen = document.getElementById('playerScreen');
     
-    // دکمه‌های صفحه بزرگ
+    // صفحه اصلی
     const mainPlayIcon = document.getElementById('mainPlayIcon');
     const playerTitle = document.getElementById('player-title');
     const playerArtist = document.getElementById('player-artist');
@@ -534,7 +404,7 @@
     const currTimeEl = document.getElementById('player-curr-time');
     const totalTimeEl = document.getElementById('player-total-time');
 
-    // المان‌های مینی پلیر
+    // مینی پلیر
     const miniPlayer = document.getElementById('miniPlayer');
     const miniTitle = document.getElementById('miniTitle');
     const miniArtist = document.getElementById('miniArtist');
@@ -549,13 +419,11 @@
     let isPlaying = false;
     let likedSongs = JSON.parse(localStorage.getItem('sg_likes')) || [];
 
-    // --- توابع پلیر ---
-    function openPlayer(index) {
-      tg.HapticFeedback.impactOccurred('medium');
-      currentTrackIndex = index;
-      const song = allSongs[index];
+    // --- توابع اصلی ---
+    function loadTrackAndPlay() {
+      const song = allSongs[currentTrackIndex];
       
-      // آپدیت صفحه بزرگ
+      // آپدیت صفحه اصلی
       playerTitle.innerText = song.title;
       playerArtist.innerText = song.artist;
       fullPlayerCover.style.background = song.coverColor;
@@ -568,21 +436,7 @@
       // لود و پلی
       audio.src = song.src;
       playAudio();
-      
-      // نمایش صفحات
-      playerScreen.classList.add('open');
-      miniPlayer.classList.add('show'); // نمایش مینی پلیر
       updateHeartIcon(song.id);
-    }
-
-    function openFullPlayerFromMini() {
-      tg.HapticFeedback.impactOccurred('light');
-      playerScreen.classList.add('open');
-    }
-
-    function closePlayer() {
-      tg.HapticFeedback.impactOccurred('light');
-      playerScreen.classList.remove('open');
     }
 
     function playAudio() {
@@ -591,6 +445,7 @@
       mainPlayIcon.innerHTML = SVG_PAUSE;
       miniPlayIcon.innerHTML = SVG_PAUSE;
       miniPlayIcon.classList.remove('play-icon');
+      fullPlayerCover.classList.add('playing'); // چرخش کاور
     }
 
     function pauseAudio() {
@@ -599,41 +454,42 @@
       mainPlayIcon.innerHTML = SVG_PLAY;
       miniPlayIcon.innerHTML = SVG_PLAY;
       miniPlayIcon.classList.add('play-icon');
+      fullPlayerCover.classList.remove('playing'); // توقف چرخش
     }
 
     function togglePlay() {
       tg.HapticFeedback.impactOccurred('heavy');
+      if (!audio.src) { loadTrackAndPlay(); return; } // اگر آهنگی انتخاب نشده
+      
       if (isPlaying) pauseAudio();
       else playAudio();
     }
 
     function togglePlayFromMini(event) {
-      event.stopPropagation(); // جلوگیری از باز شدن صفحه بزرگ
+      event.stopPropagation(); 
       togglePlay();
     }
 
     function nextTrack() {
       currentTrackIndex = (currentTrackIndex + 1) % allSongs.length;
-      openPlayer(currentTrackIndex);
+      loadTrackAndPlay();
     }
 
     function prevTrack() {
       currentTrackIndex = (currentTrackIndex - 1 + allSongs.length) % allSongs.length;
-      openPlayer(currentTrackIndex);
+      loadTrackAndPlay();
     }
 
-    // --- آپدیت نوارهای پیشرفت ---
+    // آپدیت نوارهای پیشرفت
     audio.addEventListener('timeupdate', () => {
       if (!audio.duration) return;
       const percent = (audio.currentTime / audio.duration) * 100;
       
-      // آپدیت صفحه بزرگ
       progressFill.style.width = `${percent}%`;
       seekSlider.value = percent;
       currTimeEl.innerText = formatTime(audio.currentTime);
       totalTimeEl.innerText = formatTime(audio.duration);
 
-      // آپدیت مینی پلیر
       miniProgressFill.style.width = `${percent}%`;
     });
 
@@ -652,7 +508,7 @@
       return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
     }
 
-    // --- لایک ---
+    // لایک
     function toggleLike() {
       tg.HapticFeedback.impactOccurred('medium');
       const id = allSongs[currentTrackIndex].id;
@@ -674,15 +530,34 @@
     // --- ناوبری ---
     function switchTab(tabId, element) {
       tg.HapticFeedback.impactOccurred('light');
-      if(tabId === 'explore' || tabId === 'premium') tabId = 'library'; // موقت
 
+      // تغییر ویو
       document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
       const target = document.getElementById(`${tabId}-view`);
       if(target) target.classList.add('active');
 
+      // تغییر حالت دکمه ناوبری
       document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
       if(element) element.classList.add('active');
+
+      // مدیریت مینی پلیر
+      if (tabId === 'home' || !isPlaying) {
+        miniPlayer.classList.remove('show'); // در صفحه پلیر اصلی یا وقتی قطع است، مخفی شود
+      } else {
+        miniPlayer.classList.add('show'); // در بقیه صفحات اگر در حال پخش بود، نشان داده شود
+      }
     }
+
+    // مقداردهی اولیه (لود اولین آهنگ بدون پلی شدن)
+    const initialSong = allSongs[0];
+    playerTitle.innerText = initialSong.title;
+    playerArtist.innerText = initialSong.artist;
+    fullPlayerCover.style.background = initialSong.coverColor;
+    miniTitle.innerText = initialSong.title;
+    miniArtist.innerText = initialSong.artist;
+    miniCover.style.background = initialSong.coverColor;
+    updateHeartIcon(initialSong.id);
+
   </script>
 </body>
 </html>
