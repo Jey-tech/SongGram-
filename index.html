@@ -1,14 +1,18 @@
 <!DOCTYPE html>
-<html lang="fa" dir="rtl">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>SongGram 2030</title>
+  <!-- وارد کردن فونت‌های گوگل -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+  
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
-    /* پالت رنگی سایبرپانک (نئون آبی و بنفش) */
     :root {
-      --bg-color: #050510; /* مشکی عمیق فضایی */
+      --bg-color: #050510;
       --neon-blue: #00f0ff;
       --neon-purple: #9d00ff;
       --glass-bg: rgba(255, 255, 255, 0.03);
@@ -19,12 +23,12 @@
 
     body {
       background-color: var(--bg-color);
-      /* ساخت یک پس‌زمینه کهکشانی با گرادیانت */
       background-image: 
         radial-gradient(circle at 15% 50%, rgba(157, 0, 255, 0.15), transparent 40%),
         radial-gradient(circle at 85% 30%, rgba(0, 240, 255, 0.15), transparent 40%);
       color: var(--text-main);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      /* فونت اصلی برای بدنه */
+      font-family: 'Rajdhani', sans-serif;
       margin: 0;
       padding: 20px;
       display: flex;
@@ -34,9 +38,9 @@
       box-sizing: border-box;
       overflow: hidden;
       position: relative;
+      direction: ltr; /* چپ‌چین کردن برای زبان انگلیسی */
     }
 
-    /* خطوط اسکن (حس هولوگرام) */
     body::after {
       content: "";
       position: absolute;
@@ -47,20 +51,23 @@
     }
 
     .header { width: 100%; text-align: center; margin-bottom: 20px; z-index: 2; }
+    
     .header h1 { 
       margin: 0; 
+      /* فونت تکنولوژیک برای تیتر */
+      font-family: 'Orbitron', sans-serif;
       font-size: 28px; 
       font-weight: 900; 
       background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      letter-spacing: 2px;
+      letter-spacing: 3px;
       text-transform: uppercase;
       filter: drop-shadow(0 0 10px rgba(0, 240, 255, 0.5));
     }
-    .header p { margin: 8px 0 0 0; color: var(--text-sub); font-size: 15px; letter-spacing: 1px; }
     
-    /* کارت شیشه‌ای شناور */
+    .header p { margin: 8px 0 0 0; color: var(--text-sub); font-size: 16px; font-weight: 600; letter-spacing: 1px; }
+    
     .player-card {
       background: var(--glass-bg);
       width: 100%;
@@ -69,14 +76,14 @@
       padding: 25px;
       box-shadow: 
         0 20px 50px rgba(0,0,0,0.6),
-        inset 0 0 0 1px var(--glass-border); /* حاشیه نازک شیشه‌ای */
+        inset 0 0 0 1px var(--glass-border);
       text-align: center;
       box-sizing: border-box;
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       position: relative;
       z-index: 2;
-      animation: float 6s ease-in-out infinite; /* انیمیشن شناور بودن */
+      animation: float 6s ease-in-out infinite;
     }
 
     @keyframes float {
@@ -85,11 +92,10 @@
       100% { transform: translateY(0px); }
     }
 
-    /* کاور با نور نئونی */
     .cover-container {
       width: 100%;
       aspect-ratio: 1 / 1;
-      border-radius: 50%; /* گرد کردن کاور برای حس هولوگرام */
+      border-radius: 50%;
       background: linear-gradient(135deg, #1a1a2e, #16213e);
       margin-bottom: 25px;
       position: relative;
@@ -104,7 +110,6 @@
       border: 2px solid rgba(255,255,255,0.05);
     }
 
-    /* هسته چرخان (شبیه راکتور آرک) */
     .disc {
       width: 60%;
       height: 60%;
@@ -141,23 +146,35 @@
     @keyframes spin { 100% { transform: rotate(360deg); } }
     
     .song-title { 
-      font-size: 22px; 
+      font-family: 'Orbitron', sans-serif;
+      font-size: 18px; 
       font-weight: 700; 
-      margin-bottom: 6px; 
+      margin-bottom: 8px; 
       text-shadow: 0 0 10px rgba(255,255,255,0.3);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
-    .artist-name { color: var(--neon-blue); font-size: 14px; margin-bottom: 25px; letter-spacing: 1px; opacity: 0.8; }
     
-    /* نوار پیشرفت نئونی */
+    .artist-name { 
+      color: var(--neon-blue); 
+      font-size: 15px; 
+      font-weight: 600;
+      margin-bottom: 25px; 
+      letter-spacing: 1px; 
+      opacity: 0.8; 
+    }
+    
     .progress-container {
       display: flex;
       align-items: center;
       gap: 15px;
       width: 100%;
       margin-bottom: 30px;
-      font-size: 12px;
+      font-size: 14px;
       color: var(--text-sub);
       font-variant-numeric: tabular-nums;
+      font-weight: 600;
     }
     
     .progress-bar {
@@ -201,7 +218,6 @@
     }
     .control-btn:active { opacity: 1; transform: scale(0.9); filter: drop-shadow(0 0 10px var(--neon-blue)); }
 
-    /* دکمه پخش با هاله نئونی */
     .play-btn {
       background: transparent;
       color: var(--neon-blue);
@@ -220,7 +236,6 @@
     }
     .play-btn:active { transform: scale(0.95); box-shadow: 0 0 40px rgba(0, 240, 255, 0.6), inset 0 0 25px rgba(0, 240, 255, 0.6); }
     
-    /* انیمیشن هاله دکمه پخش */
     .play-btn.pulsing { animation: pulse 2s infinite; }
     @keyframes pulse {
       0% { box-shadow: 0 0 0 0 rgba(0, 240, 255, 0.4); }
@@ -233,7 +248,7 @@
 
   <div class="header">
     <h1>SongGram</h1>
-    <p id="welcome-text">در حال اتصال به شبکه...</p>
+    <p id="welcome-text">Connecting to network...</p>
   </div>
 
   <div class="player-card">
@@ -263,14 +278,14 @@
     let tg = window.Telegram.WebApp;
     tg.ready();
     tg.expand();
-    // ست کردن هدر تلگرام به رنگ مشکی برای هماهنگی
     tg.setHeaderColor('#050510'); 
 
+    // گرفتن اسم کاربر و انگلیسی کردن پیام خوش‌آمدگویی
     const user = tg.initDataUnsafe?.user;
     if (user) {
-      document.getElementById('welcome-text').innerText = `خوش آمدی ${user.first_name} عزیز 👋`;
+      document.getElementById('welcome-text').innerText = `Welcome, ${user.first_name}`;
     } else {
-      document.getElementById('welcome-text').innerText = `سلام کاربر عزیز 👋`;
+      document.getElementById('welcome-text').innerText = `Welcome, Guest`;
     }
 
     const audio = document.getElementById('audio');
@@ -282,10 +297,11 @@
     const title = document.getElementById('title');
     const artist = document.getElementById('artist');
 
+    // لیست آهنگ‌ها با اسم‌های انگلیسی
     const playlist = [
-      { title: "صدای نئون", artist: "سازنده سایبری", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" },
-      { title: "ماتریکس", artist: "دی‌جی هولوگرام", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" },
-      { title: "سفر فضایی", artist: "کهکشان", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" }
+      { title: "Neon Sound", artist: "Cyber Maker", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" },
+      { title: "The Matrix", artist: "Hologram DJ", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" },
+      { title: "Space Journey", artist: "Galaxy", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" }
     ];
     let trackIndex = 0;
 
@@ -299,19 +315,19 @@
     function playTrack() {
       audio.play();
       playBtn.innerHTML = '⏸';
-      playBtn.classList.remove('pulsing'); // هاله قطع میشه
+      playBtn.classList.remove('pulsing');
       disc.classList.add('playing');
     }
 
     function pauseTrack() {
       audio.pause();
       playBtn.innerHTML = '▶️';
-      playBtn.classList.add('pulsing'); // هاله دوباره فعال میشه
+      playBtn.classList.add('pulsing');
       disc.classList.remove('playing');
     }
 
     function togglePlay() {
-      tg.HapticFeedback.impactOccurred('heavy'); // لرزش قوی‌تر
+      tg.HapticFeedback.impactOccurred('heavy');
       if (audio.paused) {
         playTrack();
       } else {
