@@ -28,27 +28,30 @@
       color: var(--text-main);
       font-family: 'Rajdhani', sans-serif;
       margin: 0;
-      padding: 20px;
+      /* فاصله دادن از بالای صفحه برای دکمه Close تلگرام */
+      padding: 70px 20px 30px 20px; 
       display: flex;
       flex-direction: column;
       align-items: center;
-      height: 100vh;
+      /* تغییر ارتفاع برای جلوگیری از بریدگی در گوشی‌های کوچک */
+      min-height: 100vh; 
+      height: auto;
+      overflow-y: auto; 
       box-sizing: border-box;
-      overflow: hidden;
       position: relative;
       direction: ltr;
     }
 
     body::after {
       content: "";
-      position: absolute;
+      position: fixed; /* ثابت کردن خطوط روی کل صفحه */
       top: 0; left: 0; width: 100%; height: 100%;
       background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.1) 2px, rgba(0,0,0,0.1) 4px);
       pointer-events: none;
       z-index: 10;
     }
 
-    .header { width: 100%; text-align: center; margin-bottom: 20px; z-index: 2; }
+    .header { width: 100%; text-align: center; margin-bottom: 25px; z-index: 2; }
     
     .header h1 { 
       margin: 0; 
@@ -83,15 +86,15 @@
       animation: float 6s ease-in-out infinite;
       display: flex;
       flex-direction: column;
+      margin-bottom: 20px; /* فاصله از پایین صفحه */
     }
 
     @keyframes float {
       0% { transform: translateY(0px); }
-      50% { transform: translateY(-10px); }
+      50% { transform: translateY(-8px); }
       100% { transform: translateY(0px); }
     }
 
-    /* نوار بالا برای آیکون‌های پلی‌لیست و علاقه‌مندی */
     .top-actions {
       display: flex;
       justify-content: space-between;
@@ -228,7 +231,6 @@
       gap: 30px;
     }
     
-    /* استایل دکمه‌های کنترل سایبری */
     .control-btn {
       background: none;
       border: none;
@@ -258,7 +260,6 @@
       transform: scale(0.9);
     }
 
-    /* دکمه پخش اصلی */
     .play-btn {
       background: transparent;
       border: 2px solid var(--neon-blue);
@@ -303,14 +304,11 @@
   </div>
 
   <div class="player-card">
-    <!-- آیکون‌های پلی‌لیست و قلب سایبری -->
     <div class="top-actions">
-      <!-- آیکون پلی‌لیست (خطوط تیز) -->
       <svg class="action-icon" viewBox="0 0 24 24">
         <path d="M4 6h16M4 12h12M4 18h16" stroke-linecap="square"/>
         <circle cx="20" cy="12" r="1.5" fill="currentColor"/>
       </svg>
-      <!-- آیکون قلب سایبری -->
       <svg class="action-icon" viewBox="0 0 24 24">
         <path d="M12 21 L3 12 L8 7 L12 11 L16 7 L21 12 Z" stroke-linejoin="miter"/>
       </svg>
@@ -330,7 +328,6 @@
     </div>
     
     <div class="controls">
-      <!-- دکمه ترک قبلی -->
       <button class="control-btn" onclick="prevTrack()">
         <svg viewBox="0 0 24 24">
           <path d="M19 20 L9 12 L19 4 Z" />
@@ -338,14 +335,12 @@
         </svg>
       </button>
       
-      <!-- دکمه پخش/توقف -->
       <button class="play-btn pulsing" id="playBtn" onclick="togglePlay()">
         <svg id="playIcon" viewBox="0 0 24 24">
           <path d="M7 4 L19 12 L7 20 Z" />
         </svg>
       </button>
       
-      <!-- دکمه ترک بعدی -->
       <button class="control-btn" onclick="nextTrack()">
         <svg viewBox="0 0 24 24">
           <path d="M5 4 L15 12 L5 20 Z" />
@@ -380,7 +375,6 @@
     const title = document.getElementById('title');
     const artist = document.getElementById('artist');
 
-    // آیکون‌های SVG برای تغییر وضعیت پخش
     const SVG_PLAY = '<path d="M7 4 L19 12 L7 20 Z" />';
     const SVG_PAUSE = '<path d="M6 4 h4 v16 h-4 Z M14 4 h4 v16 h-4 Z" />';
 
